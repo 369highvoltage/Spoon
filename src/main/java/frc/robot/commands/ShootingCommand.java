@@ -20,45 +20,40 @@ import edu.wpi.first.wpilibj.Timer;
 
 
 public class ShootingCommand extends CommandBase {
-  Timer timer;
-  private final TurretSubsystem turret_subsystem;
+  boolean buttonPressed = true;
+  double modifier;
+  TurretSubsystem turret_subsystem;
 
   
-  public ShootingCommand(TurretSubsystem subsystem) {
+  public ShootingCommand(TurretSubsystem subsystem, boolean buttonPressed, double modifier) {
+    // if the button is pressed the command runs, modifier is used to regulate the speed of the shooter for now
     turret_subsystem = subsystem;
-    addRequirements(turret_subsystem);
-    timer = new Timer();
+    addRequirements(subsystem);
   }
 
   // Called just before this Command runs the first time
   @Override
   public void initialize() {
-   
-    timer.start();
-    turret_subsystem.shooter(1.0);
-    //set shooter motor to desired max
-
+    turret_subsystem.shooter(1.0, modifier);
+    System.out.println("poop");
   }
 
   // Called repeatedly when this Command is scheduled to run
   @Override
   public void execute() {
-   if(timer.get() >= 1){
-    turret_subsystem.shooter(1.0);
+   if(turret_subsystem.shooterEncoder() >= 17300){
+    turret_subsystem.shooter(1.0, modifier);
     turret_subsystem.feeder(1.0); }
-    
-
-
-    //continue setting shooter motors to max
-    //set feeder motors to max
+    else {
+      turret_subsystem.shooter(1.0, modifier);
+    }
   }
 
 
   // Called once after isFinished returns true
   @Override
   public void end(boolean interrupted) {
-    //set all 3 motors to zero
-    turret_subsystem.shooter(0.0);
+    turret_subsystem.shooter(0.0, modifier);
     turret_subsystem.feeder(0.0);
 
   }
@@ -66,8 +61,7 @@ public class ShootingCommand extends CommandBase {
   // Make this return true when this Command no longer needs to run execute()
   @Override
   public boolean isFinished() {
-   return (timer.get() >= 5);
-    
+    return (!buttonPressed);
   }
 
 }

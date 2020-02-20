@@ -30,13 +30,13 @@ public class DriveForward extends CommandBase {
   // Called just before this Command runs the first time
   @Override
   public void initialize() {
-    initialPosition = encoder_subsysem.getPosition();
+    // initialPosition = encoder_subsysem.getPosition();
   }
 
   // Called repeatedly when this Command is scheduled to run
   @Override
   public void execute() {
-    currentPosition = encoder_subsysem.getPosition();
+    // currentPosition = encoder_subsysem.getPosition();
     if (currentPosition - initialPosition == 0){
       drive_subsystem.tankDrive(1.0, 1.0, 1.0);
     }

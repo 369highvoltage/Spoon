@@ -16,8 +16,9 @@ import com.revrobotics.CANSparkMax;
 import com.revrobotics.SparkMax;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 import com.ctre.phoenix.sensors.PigeonIMU;  //Pigeon
+import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix.motorcontrol.can.*; //TalonSRX
-// import edu.wpi.first.wpilibj.ADXRS450_Gyro; //gyro
+import com.revrobotics.CANEncoder;
 
 public class DriveSubsystem extends SubsystemBase { //create variables are here
   private static final int deviceID1 = 1;
@@ -32,10 +33,10 @@ public class DriveSubsystem extends SubsystemBase { //create variables are here
   SpeedControllerGroup m_right;
   DifferentialDrive m_drive;
   PigeonIMU pigeon;
-  // PigeonIMU.GeneralStatus genStat;
   TalonSRX m_pigeon;
   double[] ypr;
-  // ADXRS450_Gyro gyro;
+  CANEncoder e_frontLeft;
+  CANEncoder e_frontRight;
 
   public DriveSubsystem(){ //define variables here
     m_frontLeft = new CANSparkMax(deviceID4, MotorType.kBrushless);
@@ -47,26 +48,24 @@ public class DriveSubsystem extends SubsystemBase { //create variables are here
     m_drive = new DifferentialDrive(m_left, m_right);
     m_pigeon = new WPI_TalonSRX(5);
     pigeon = new PigeonIMU(m_pigeon); //the pigeon is connected to the TalonSRX(5)
-    // genStat = new PigeonIMU.GeneralStatus();
     ypr = new double[3];
-  //   gyro = new ADXRS450_Gyro();
-  //   gyro.calibrate();
-  //   gyro.reset();
   }
   
   public void tankDrive(double leftSpeed, double rightSpeed, double modifier){
     m_drive.tankDrive(leftSpeed*modifier, rightSpeed*modifier);
-    // double x = gyro.getAngle();
   }
 
   public double getYaw(){
     pigeon.getYawPitchRoll(ypr);
-    // System.out.println("Yaw= " + ypr[0]);
     return ypr[0];
   }  
 
-  // public void resetGyro(){
-  //   gyro.reset();
-  // }
+  public void leftDriveEncoder(){
+    System.out.println("Drive left enc = " + e_frontLeft.getPositionConversionFactor());
+  }
+
+  public void rightDriveEncoder(){
+    System.out.println("Drive right enc = " + e_frontRight.getPositionConversionFactor());
+  }
   
 }

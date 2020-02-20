@@ -8,9 +8,11 @@
 package frc.robot;
 //Commands & Subsystems
 import edu.wpi.first.wpilibj.TimedRobot;
+import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import frc.robot.subsystems.*;
+import frc.robot.commands.*;
 //Individual imports
 
 
@@ -22,9 +24,11 @@ public class Robot extends TimedRobot {
   CameraSubsystem camera_subsystem;
   EncoderSubsystem encoder_subsystem;
   OI oi;
+  TurretSubsystem turret_subsystem;
+  ShootingCommand shooting_command;
   double turretVal;
   double turretVal2;
-  TurretSubsystem turret_subsystem;
+  JoystickButton btn;
 
   
  
@@ -37,6 +41,9 @@ public class Robot extends TimedRobot {
     encoder_subsystem = new EncoderSubsystem();
     turret_subsystem = new TurretSubsystem();
     oi = new OI();
+    btn = new JoystickButton(oi.getController(), 5);
+    //shooting_command = new ShootingCommand(turret_subsystem, oi.l1(), 0.8);
+   
 
 
     //settings when the robot turns on
@@ -115,7 +122,7 @@ public class Robot extends TimedRobot {
       m_autonomousCommand.cancel();
     }
     camera_subsystem.ledOff();
-
+    btn.whenPressed(() -> new ShootingCommand(turret_subsystem, oi.getController().getRawButton(5), 0.8));
   }
 
   /**
@@ -123,14 +130,13 @@ public class Robot extends TimedRobot {
    */
   @Override
   public void teleopPeriodic() {
-    drive_subsystem.tankDrive(oi.getLeftStick(), oi.getRightStick(), 1);
-    drive_subsystem.getYaw();
-    //drive_subsystem.tankDrive(oi.getLeftStick(), oi.getRightStick(),1);
-    //print("Encoder position is"+encoder_subsystem.getPosition());
-    //print("Encoder velocity is"+encoder_subsystem.getVelocity());
-    print("encoder pos is" + turret_subsystem.encoderVal());
+
+    drive_subsystem.tankDrive(oi.getLeftStick(), oi.getRightStick(), 0.95);
+    print("encoder pos is" + turret_subsystem.encoderVal()); //prints turret values
+
     turretVal = oi.getLeftTurretAxis();//Get fixed inputs from oi
     turretVal2 = oi.getRightTurretAxis();
+    
     if (turret_subsystem.encoderVal()>=8000){//If the encoder value is greater than 8000, do this
       while ((turret_subsystem.encoderVal()>=8000)&&(turretVal2>=.1)){// if the value is above 8000, and trying to turn right
         turretVal2 = 0;//reduce right input
@@ -142,7 +148,7 @@ public class Robot extends TimedRobot {
       }
     }
     turretVal2 = turretVal-turretVal2;//final calculations
-    turret_subsystem.setTurretSpeed(turretVal2);
+    turret_subsystem.setTurretSpeed(turretVal2, 0.25);
 
     //Autoaim (toggle)
     if (oi.circle()){
@@ -150,14 +156,14 @@ public class Robot extends TimedRobot {
         //if there is no target, do nothing
       }else if((camera_subsystem.isTarget()==true)){
         double adjust = aimbot();//if there is a target, get the distance from it
-        turret_subsystem.setTurretSpeed(adjust);//set the speed to that distance, left is negative and right is positive
+        turret_subsystem.setTurretSpeed(adjust, 0.25);//set the speed to that distance, left is negative and right is positive
       }
       
     }
     
-    turret_subsystem.shooter(oi.l1());
-    turret_subsystem.feeder(oi.r1());
+    
     turret_subsystem.encoderReset(oi.triangle());
+    turret_subsystem.shooterEncoder();
   }
 
   @Override
