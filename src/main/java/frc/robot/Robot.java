@@ -182,8 +182,9 @@ public class Robot extends TimedRobot {
       while(oi.circleup()!=true){
           double adjust = turret_Limelight.steeringAdjust();//if there is a target, get the distance from it
           turret_subsystem.setTurretSpeed(adjust, 0.25);//set the speed to that distance, left is negative and right is positive
-        }
       }
+    }
+
     /*
     if (turret_Limelight.canSeeTarget()==false){
           //if there is no target, do nothing

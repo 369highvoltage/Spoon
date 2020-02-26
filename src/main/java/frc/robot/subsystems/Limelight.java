@@ -43,7 +43,6 @@ public class Limelight extends SubsystemBase {
     public void setCamMode(int mode) {
         table.getEntry("camMode").setNumber(mode);
     }
-
     public double steeringAdjust() {
         float kp = -.05f;//Adjusts the value returned from Limelight
         float minCommand = .005f;//Minimum value a value can have
