@@ -16,6 +16,7 @@ public class Limelight extends SubsystemBase {
     public Limelight(String limelightName) {
         table = NetworkTableInstance.getDefault().getTable(limelightName);
         LLName = limelightName;
+        //System.out.println(NetworkTableInstance.getDefault().getTable("CameraPublisher").getEntry(limelightName).getString("source"));
     }
 
     public boolean canSeeTarget() {
@@ -23,6 +24,11 @@ public class Limelight extends SubsystemBase {
     }
 
     public double offsetX() {
+        /*
+        if(LLName=="limelight-turret"){
+            System.out.println(table.getEntry("tx").getDouble(0));
+        }
+        */
         System.out.println(table.getEntry("tx").getDouble(0));
         return table.getEntry("tx").getDouble(0.00);
 
@@ -44,9 +50,9 @@ public class Limelight extends SubsystemBase {
         table.getEntry("camMode").setNumber(mode);
     }
     public double steeringAdjust() {
-        float kp = -.05f;//Adjusts the value returned from Limelight
-        float minCommand = .005f;//Minimum value a value can have
-        float steeringAdjust = 0.05f;//Default value of adjust
+        float kp = -.5f;//Adjusts the value returned from Limelight
+        float minCommand = .05f;//Minimum value a value can have
+        float steeringAdjust = 0.077f;//Default value of adjust
         float tx = (float)offsetX();
         //SmartDashboard.setDefaultNumber("TX", tx);
         float headingError = -tx;
@@ -56,13 +62,18 @@ public class Limelight extends SubsystemBase {
         }else if (tx < 1){
             steeringAdjust = kp*headingError + minCommand;
         }
+        if(steeringAdjust > 1){
+            steeringAdjust = 1;
+        }else if(steeringAdjust < -1){
+            steeringAdjust = -1;
+        }
         return steeringAdjust;
       }
 
       public double distanceAdjust(){
         float KpDist = -0.1f;
-        float Xoffset = (float)offsetY();
-        float distance_error = -Xoffset;
+        float Yoffset = (float)offsetY();
+        float distance_error = -Yoffset;
         float distance_adjust = distance_error*KpDist;
         if (distance_adjust > 1){
           distance_adjust = 1;
@@ -71,6 +82,7 @@ public class Limelight extends SubsystemBase {
         }
         return distance_adjust;
       }
+
       public void Vision() {
         ShuffleboardTab mainTab = Shuffleboard.getTab("SmartDashboard");
         if(LLName==("limelight-turret")){

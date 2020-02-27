@@ -77,7 +77,7 @@ public class TurretSubsystem extends SubsystemBase {
   }
 
   public double shooterEncoder(){
-    System.out.println("shooter encoder"+  m_shooterRight.getSelectedSensorVelocity());
+    //System.out.println("shooter encoder"+  m_shooterRight.getSelectedSensorVelocity());
     return m_shooterRight.getSelectedSensorVelocity();
   }
 

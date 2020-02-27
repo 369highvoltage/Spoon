@@ -55,7 +55,7 @@ public class Robot extends TimedRobot {
     turret_subsystem = new TurretSubsystem();
     intake_subsystem = new IntakeSubsystem();
     turret_Limelight = new Limelight("limelight-turret");
-    turret_Limelight = new Limelight("limelight-intake");
+    intake_Limelight = new Limelight("limelight-intake");
     oi = new OI();
     btn = new JoystickButton(oi.getController(), 5);
    
@@ -156,7 +156,7 @@ public class Robot extends TimedRobot {
     //drive_subsystem.tankDrive(oi.getLeftStick(), oi.getRightStick(),1);
     //print("Encoder position is"+encoder_subsystem.getPosition());
     //print("Encoder velocity is"+encoder_subsystem.getVelocity());
-    print("encoder pos is" + turret_subsystem.encoderVal());
+    //print("encoder pos is" + turret_subsystem.encoderVal());
     turretVal = oi.getLeftTurretAxis();//Get fixed inputs from oi
     turretVal2 = oi.getRightTurretAxis();
     /*
@@ -181,6 +181,7 @@ public class Robot extends TimedRobot {
       print("pressed");
       while(oi.circleup()!=true){
           double adjust = turret_Limelight.steeringAdjust();//if there is a target, get the distance from it
+          print("Adjust is "+adjust);
           turret_subsystem.setTurretSpeed(adjust, 0.25);//set the speed to that distance, left is negative and right is positive
       }
     }

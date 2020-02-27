@@ -18,11 +18,11 @@ public EncoderSubsystem(){
     encoder = new CANEncoder(m_main, EncoderType.kHallSensor, countPerRev);
 }
 public double getPosition(){
-    System.out.println("drive encoder position" + encoder.getPosition()/(-4.87));
+    //System.out.println("drive encoder position" + encoder.getPosition()/(-4.87));
     return (double)encoder.getPosition()/(-4.87);
 }
 public double getVelocity(){
-    System.out.println("drive encoder velocity" + encoder.getVelocity());
+    //System.out.println("drive encoder velocity" + encoder.getVelocity());
     return (double)encoder.getVelocity();
 }
 
