@@ -51,7 +51,7 @@ public class Limelight extends SubsystemBase {
     }
     public double steeringAdjust() {
         float kp = -.5f;//Adjusts the value returned from Limelight
-        float minCommand = .05f;//Minimum value a value can have
+        float minCommand = .01f;//Minimum value a value can have
         float steeringAdjust = 0.077f;//Default value of adjust
         float tx = (float)offsetX();
         //SmartDashboard.setDefaultNumber("TX", tx);
@@ -62,11 +62,11 @@ public class Limelight extends SubsystemBase {
         }else if (tx < 1){
             steeringAdjust = kp*headingError + minCommand;
         }
-        if(steeringAdjust > 1){
-            steeringAdjust = 1;
-        }else if(steeringAdjust < -1){
-            steeringAdjust = -1;
-        }
+            if(steeringAdjust > 1){
+                steeringAdjust = 1;
+            }else if(steeringAdjust < -1){
+                steeringAdjust = -1;
+            }
         return steeringAdjust;
       }
 
