@@ -42,6 +42,7 @@ public class Robot extends TimedRobot {
   DriveForward drive_forward;
   DriveBackward drive_backward;
   Limelight turret_Limelight;
+  Limelight intake_Limelight;
   
  
 
@@ -53,14 +54,16 @@ public class Robot extends TimedRobot {
     encoder_subsystem = new EncoderSubsystem();
     turret_subsystem = new TurretSubsystem();
     intake_subsystem = new IntakeSubsystem();
-    turret_Limelight = new Limelight("Turret");
+    turret_Limelight = new Limelight("limelight-turret");
+    turret_Limelight = new Limelight("limelight-intake");
     oi = new OI();
     btn = new JoystickButton(oi.getController(), 5);
    
 
 
     //settings when the robot turns on
-    
+    //turret_Limelight.Vision();
+    //intake_Limelight.Vision();
   }
 
   /**
@@ -175,22 +178,29 @@ public class Robot extends TimedRobot {
 
     //Autoaim (toggle)
     if (oi.circle()==true){
+      print("pressed");
       while(oi.circleup()!=true){
-        if (turret_Limelight.canSeeTarget()==false){
-          //if there is no target, do nothing
-        }else if((turret_Limelight.canSeeTarget()==true)){
           double adjust = turret_Limelight.steeringAdjust();//if there is a target, get the distance from it
           turret_subsystem.setTurretSpeed(adjust, 0.25);//set the speed to that distance, left is negative and right is positive
-        }
       }
     }
 
+    /*
+    if (turret_Limelight.canSeeTarget()==false){
+          //if there is no target, do nothing
+        }else if((turret_Limelight.canSeeTarget()==true)){
+          print("yes.");
+          double adjust = turret_Limelight.steeringAdjust();//if there is a target, get the distance from it
+          turret_subsystem.setTurretSpeed(adjust, 0.25);//set the speed to that distance, left is negative and right is positive
+        }
+    */
     turret_subsystem.feeder(oi.r1());
     turret_subsystem.encoderReset(oi.triangle());
     intake_subsystem.setFloorSpeed(-oi.square());
     intake_subsystem.setIntakeSpeed(-oi.x());
     encoder_subsystem.getPosition();
     encoder_subsystem.getVelocity();
+
     // turret_subsystem.shooterEncoder();
 
   }

@@ -3,13 +3,19 @@ package frc.robot.subsystems;
 import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.networktables.NetworkTable;
+import edu.wpi.first.wpilibj.shuffleboard.*;
+import edu.wpi.cscore.HttpCamera;
+import edu.wpi.cscore.MjpegServer;
 
 public class Limelight extends SubsystemBase {
-
+    private MjpegServer jpeg;
     private NetworkTable table;
+    private HttpCamera LLFeed;
+    private String LLName;
 
     public Limelight(String limelightName) {
         table = NetworkTableInstance.getDefault().getTable(limelightName);
+        LLName = limelightName;
     }
 
     public boolean canSeeTarget() {
@@ -17,7 +23,9 @@ public class Limelight extends SubsystemBase {
     }
 
     public double offsetX() {
+        System.out.println(table.getEntry("tx").getDouble(0));
         return table.getEntry("tx").getDouble(0.00);
+        
     }
 
     public double offsetY() {
@@ -35,7 +43,6 @@ public class Limelight extends SubsystemBase {
     public void setCamMode(int mode) {
         table.getEntry("camMode").setNumber(mode);
     }
-
     public double steeringAdjust() {
         float kp = -.05f;//Adjusts the value returned from Limelight
         float minCommand = .005f;//Minimum value a value can have
@@ -64,5 +71,16 @@ public class Limelight extends SubsystemBase {
         }
         return distance_adjust;
       }
+      public void Vision() {
+        ShuffleboardTab mainTab = Shuffleboard.getTab("SmartDashboard");
+        if(LLName==("limelight-turret")){
+            LLFeed = new HttpCamera("limelight", "http://10.3.69.44:5800/stream.mjpeg");
+        }
+        if(LLName==("limelight-intake")){
+            LLFeed = new HttpCamera("limelight", "http://10.3.69.12:5800/stream.mjpeg");
+        }
+        mainTab.add("LimeLight", LLFeed).withPosition(0, 0).withSize(15, 8);
+
+    }
 
 }
