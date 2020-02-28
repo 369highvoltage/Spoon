@@ -78,7 +78,6 @@ public class IntakeCommand extends CommandBase {
      }
     }
   }
-}
 
   // Called once after isFinished returns true
   @Override
