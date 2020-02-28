@@ -149,6 +149,7 @@ public class Robot extends TimedRobot {
     boolean m_LimelightHasValidTarget;
 
     btn.whenPressed(new ShootingCommand(turret_subsystem, oi, 0.8, 14000));
+    //oi.square.whenPressed(new IntakeCommand(intake_Limelight, oi, drive_subsystem, 0.6));
   }
 
   /**
@@ -185,7 +186,7 @@ public class Robot extends TimedRobot {
     */
     //turret_subsystem.feeder(oi.r1());
     turret_subsystem.encoderReset(oi.triangle());
-    intake_subsystem.setFloorSpeed(-oi.square());
+    //intake_subsystem.setFloorSpeed(-oi.square());
     intake_subsystem.setIntakeSpeed(-oi.x());
     encoder_subsystem.getPosition();
     encoder_subsystem.getVelocity();
