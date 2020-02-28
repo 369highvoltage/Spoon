@@ -48,7 +48,7 @@ public class IntakeCommand extends CommandBase {
   // Called just before this Command runs the first time
   @Override
   public void initialize() {
-    intake_limelight.setLEDMode(1);
+    //intake_limelight.setLEDMode(3);
     intake_limelight.setPipeline(0);
   }
 
@@ -59,9 +59,7 @@ public class IntakeCommand extends CommandBase {
     if (intake_limelight.canSeeTarget()==true) {
       double leftAdjust = -1.0; 
       double rightAdjust = -1.0; // default speed values for chase
-      double mindistance = 5;//Once at that speed, fire/load balls
-      //17300 for
-      //System.out.println("Execute shooter stuff");
+
     leftAdjust -= intake_limelight.steeringAdjust();//adjust each side according to tx
     rightAdjust += intake_limelight.steeringAdjust();
 /*
@@ -83,7 +81,7 @@ public class IntakeCommand extends CommandBase {
   @Override
   public void end(boolean interrupted) {
     //Stops all motors and resets timer
-    intake_limelight.setCamMode(1);
+    intake_limelight.setPipeline(1);
     intake_limelight.setLEDMode(0);
     intake_subsystem.setIntakeSpeed(0.0);
     timer.reset();
@@ -98,7 +96,7 @@ public class IntakeCommand extends CommandBase {
       System.out.println("Disabled");
       return true;
     }else{
-      SmartDashboard.putBoolean("Shooting", buttonPressed);//Displays shooting status
+      SmartDashboard.putBoolean("Following", buttonPressed);//Displays shooting status
     return (!buttonPressed);//returns false if button is pressed
     }
   }

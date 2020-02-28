@@ -24,30 +24,36 @@ public class Limelight extends SubsystemBase {
     }
 
     public double offsetX() {
-        /*
-        if(LLName=="limelight-turret"){
-            System.out.println(table.getEntry("tx").getDouble(0));
-        }
-        */
-        System.out.println(table.getEntry("tx").getDouble(0));
         return table.getEntry("tx").getDouble(0.00);
 
     }
-
     public double offsetY() {
         return table.getEntry("ty").getDouble(0.00);
+    }
+    public double areaPercent() {
+        return table.getEntry("ta").getDouble(0.00);
     }
     //a value determined on the number of pipelines we have (created within limelight-local:5801)
     public void setPipeline(int mode) {
         table.getEntry("pipeline").setNumber(mode);
     }
-    //a value between 0 and 1, 0 being on, 1 being off 
+    //a value setting the led mode of the limelight
     public void setLEDMode(int mode) {
         table.getEntry("ledMode").setNumber(mode);
+        /*
+        0	use the LED Mode set in the current pipeline
+        1	force off
+        2	force blink
+        3	force on
+        */
     }
     //a value between 0 and 1, 0 being on, 1 being off 
     public void setCamMode(int mode) {
         table.getEntry("camMode").setNumber(mode);
+        /*
+        0	Vision processor
+        1	Driver Camera (Increases exposure, disables vision processing)
+        */
     }
     public double steeringAdjust() {
         float kp = -.1f;//Adjusts the value returned from Limelight
