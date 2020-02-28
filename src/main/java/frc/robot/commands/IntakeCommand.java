@@ -10,6 +10,8 @@ package frc.robot.commands;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.IntakeSubsystem;
 import frc.robot.subsystems.Limelight;
+import frc.robot.subsystems.DriveSubsystem;
+import frc.robot.subsystems.OI;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
@@ -20,21 +22,25 @@ public class IntakeCommand extends CommandBase {
   boolean buttonPressed;
   Limelight intake_limelight;
   double mod;
-
-  TurretSubsystem turret_subsystem;
   IntakeSubsystem intake_subsystem;
+  DriveSubsystem drive_subsystem;
   OI oi;
 
+
   
-  public ShootingCommand(TurretSubsystem subsystem, OI subsystem2, double modifier) {
+  public IntakeCommand(Limelight subsystem1, OI subsystem2, DriveSubsystem subsystem3, double modifier) {
     // if the button is pressed the command runs, modifier is used to regulate the speed of the shooter for now
-    turret_subsystem = subsystem;
+    intake_limelight = subsystem1;
     oi = subsystem2;
-    addRequirements(subsystem);
+    drive_subsystem = subsystem3;
+    addRequirements(subsystem1);
     addRequirements(subsystem2);
+    addRequirements(subsystem3);
+
     timer = new Timer();
-    turret_subsystem = new TurretSubsystem();
+    intake_limelight = new Limelight("limelight-intake");
     intake_subsystem = new IntakeSubsystem();
+    drive_subsystem = new DriveSubsystem();
     oi = new OI();
     mod = modifier;
   }
@@ -42,39 +48,47 @@ public class IntakeCommand extends CommandBase {
   // Called just before this Command runs the first time
   @Override
   public void initialize() {
-    turret_subsystem.shooter(1.0, mod);
+    intake_limelight.setLEDMode(1);
+    intake_limelight.setPipeline(0);
   }
 
   // Called repeatedly when this Command is scheduled to run
   @Override
   public void execute() {
     
-    if (turret_subsystem.shooterEncoder() >= 14000) {//Once at that speed, fire/load balls
+    if (intake_limelight.canSeeTarget()==true) {
+      double leftAdjust = -1.0; 
+      double rightAdjust = -1.0; // default speed values for chase
+      double mindistance = 5;//Once at that speed, fire/load balls
       //17300 for
       //System.out.println("Execute shooter stuff");
-      turret_subsystem.shooter(1.0,mod);
-      turret_subsystem.feeder(0.75);
-      intake_subsystem.setFloorSpeed(-0.75);
-      System.out.println("Shooting "+timer.get());
-    } else{
-      turret_subsystem.shooter(1.0,mod);//Charges falcon motors until they reach certain speed
-      SmartDashboard.putNumber("Shooter Speed", turret_subsystem.shooterEncoder());
-      timer.start();//Starts the timer
-      }
-      buttonPressed = oi.l1();
+    leftAdjust -= intake_limelight.steeringAdjust();//adjust each side according to tx
+    rightAdjust += intake_limelight.steeringAdjust();
+/*
+     if(Math.abs(intake_limelight.offsetY()) <= mindistance){//checks if the height is less than five, if it is stop 
+       drive_subsystem.tankDrive(0, 0, 1);
+     }else{
+       */
+       if(intake_limelight.canSeeTarget() == false){//check if there is target, if not, spin
+         drive_subsystem.tankDrive(-.5, .5, .5);
+       }else if((intake_limelight.canSeeTarget() == true)){//check if there is target, use adjust values to move
+         drive_subsystem.tankDrive(leftAdjust, rightAdjust, 0.5);
+         intake_subsystem.setIntakeSpeed(-.5);
+         
+     }
+    }
   }
-
+}
 
   // Called once after isFinished returns true
   @Override
   public void end(boolean interrupted) {
     //Stops all motors and resets timer
-    turret_subsystem.shooter(0.0, mod);
-    turret_subsystem.feeder(0.0);
-    intake_subsystem.setFloorSpeed(0.0);
+    intake_limelight.setCamMode(1);
+    intake_limelight.setLEDMode(0);
+    intake_subsystem.setIntakeSpeed(0.0);
     timer.reset();
     System.out.println("Ended");
-    SmartDashboard.putBoolean("Shooting", false);
   }
 
   // Make this return true when this Command no longer needs to run execute()
