@@ -14,6 +14,7 @@ import frc.robot.subsystems.DriveSubsystem;
 public class TurnRight extends CommandBase {
   double pigeonVal;
   double pigeonValnit;
+  double mod = 0.5;
 
   
   private final DriveSubsystem drive_subsystem;
@@ -29,14 +30,15 @@ public class TurnRight extends CommandBase {
   @Override
   public void initialize() {
     //get value from pigeon
-    pigeonValnit = drive_subsystem.getYaw();
+    pigeonValnit = drive_subsystem.getYaw();    
+    drive_subsystem.tankDrive(-1.0, 1.0, mod);  
   }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
     pigeonVal= drive_subsystem.getYaw();
-    drive_subsystem.tankDrive(1.0, -1.0, 1.0);
+    drive_subsystem.tankDrive(-1.0, 1.0, mod);
     //if (pigeonVal > pigeonValnit-90) {
     //} 
 
@@ -45,7 +47,7 @@ public class TurnRight extends CommandBase {
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
-    drive_subsystem.tankDrive(0.0, 0.0, 1.0);
+    drive_subsystem.tankDrive(0.0, 0.0, mod);
   }
 
   // Returns true when the command should end.

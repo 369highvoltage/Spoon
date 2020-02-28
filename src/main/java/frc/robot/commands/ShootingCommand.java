@@ -27,13 +27,15 @@ public class ShootingCommand extends CommandBase {
   boolean buttonPressed;
   double mod;
   double maximum = 17300;
+  double acc;
 
   TurretSubsystem turret_subsystem;
   IntakeSubsystem intake_subsystem;
   OI oi;
 
+
   
-  public ShootingCommand(TurretSubsystem subsystem, OI subsystem2, double modifier) {
+  public ShootingCommand(TurretSubsystem subsystem, OI subsystem2, double modifier, double accuracy) {
     // if the button is pressed the command runs, modifier is used to regulate the speed of the shooter for now
     turret_subsystem = subsystem;
     oi = subsystem2;
@@ -44,6 +46,7 @@ public class ShootingCommand extends CommandBase {
     intake_subsystem = new IntakeSubsystem();
     oi = new OI();
     mod = modifier;
+    acc = accuracy;
   }
 
   // Called just before this Command runs the first time
@@ -56,12 +59,12 @@ public class ShootingCommand extends CommandBase {
   @Override
   public void execute() {
     
-    if (turret_subsystem.shooterEncoder() >= 14000) {//Once at that speed, fire/load balls
+    if (turret_subsystem.shooterEncoder() >= acc) {//Once at that speed, fire/load balls
       //17300 for
       //System.out.println("Execute shooter stuff");
       turret_subsystem.shooter(1.0,mod);
-      turret_subsystem.feeder(0.75);
-      intake_subsystem.setFloorSpeed(-0.75);
+      turret_subsystem.feeder(1.0);
+      intake_subsystem.setFloorSpeed(-1.0);
       System.out.println("Shooting "+timer.get());
     } else{
       turret_subsystem.shooter(1.0,mod);//Charges falcon motors until they reach certain speed
