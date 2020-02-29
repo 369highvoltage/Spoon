@@ -211,10 +211,7 @@ public class Robot extends TimedRobot {
     //encoder_subsystem.getVelocity();
 
     // turret_subsystem.shooterEncoder();
-      }
-    }
-
-   
+    
     RobotContainer.m_intake_subsystem.setFloorSpeed(-RobotContainer.m_oi.square());
     RobotContainer.m_intake_subsystem.setIntakeSpeed(-RobotContainer.m_oi.x());
     RobotContainer.m_turret_subsystem.encoderVal(); //turret encoder
@@ -225,6 +222,9 @@ public class Robot extends TimedRobot {
     }
     
   }
+  
+
+   
 
   @Override
   public void testInit() {
