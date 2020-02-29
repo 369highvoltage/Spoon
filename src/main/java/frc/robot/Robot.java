@@ -67,8 +67,8 @@ public class Robot extends TimedRobot {
     turret_Limelight = new Limelight("limelight-turret");
     intake_Limelight = new Limelight("limelight-intake");
 
-    turn_left = new TurnLeft(drive_subsystem);
-    turn_right = new TurnRight(drive_subsystem);
+    turn_left = new TurnLeft();
+    turn_right = new TurnRight();
     oi = new OI();
     btn = new JoystickButton(oi.getController(), 5);
     // autonomus1 = new Autonomus1();
