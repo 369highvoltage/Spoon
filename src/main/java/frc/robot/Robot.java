@@ -29,6 +29,7 @@ public class Robot extends TimedRobot {
   TurnLeft turn_left;
   TurnRight turn_right;
   ShootingCommand shooting_command;
+  AutoTest autonomus;
   //Autonomus1 autonomus1;
   //subsystem
   DriveSubsystem drive_subsystem;
@@ -36,6 +37,11 @@ public class Robot extends TimedRobot {
   OI oi;
   TurretSubsystem turret_subsystem;
   IntakeSubsystem intake_subsystem;
+  // DriveSubsystem drive_subsystem;
+  // EncoderSubsystem encoder_subsystem;
+  // OI oi;
+  // TurretSubsystem turret_subsystem;
+  // IntakeSubsystem intake_subsystem;
   //variables
   double turretVal;
   double turretVal2;
@@ -53,7 +59,7 @@ public class Robot extends TimedRobot {
   @Override
   public void robotInit() {
     m_robotContainer = new RobotContainer();
-    drive_subsystem = new DriveSubsystem();
+    // drive_subsystem = new DriveSubsystem();
     //camera_subsystem = new CameraSubsystem();
     encoder_subsystem = new EncoderSubsystem();
     turret_subsystem = new TurretSubsystem();
@@ -66,6 +72,15 @@ public class Robot extends TimedRobot {
     oi = new OI();
     btn = new JoystickButton(oi.getController(), 5);
     // autonomus1 = new Autonomus1();
+    // encoder_subsystem = new EncoderSubsystem();
+    // turret_subsystem = new TurretSubsystem();
+    // intake_subsystem = new IntakeSubsystem();
+    turn_left = new TurnLeft();
+    turn_right = new TurnRight();
+    // oi = new OI();
+    btn = new JoystickButton(RobotContainer.m_oi.getController(), 5);
+    autonomus = new AutoTest();
+    
    
 
 
@@ -111,6 +126,8 @@ public class Robot extends TimedRobot {
     if (m_autonomousCommand != null) {
       m_autonomousCommand.schedule();
     }
+
+    autonomus.autonomous1().schedule();
     
   }
 
@@ -148,8 +165,7 @@ public class Robot extends TimedRobot {
     //camera_subsystem.ledOff();
     boolean m_LimelightHasValidTarget;
 
-    btn.whenPressed(new ShootingCommand(turret_subsystem, oi, 0.8, 14000));
-    //oi.square.whenPressed(new IntakeCommand(intake_Limelight, oi, drive_subsystem, 0.6));
+    btn.whenPressed(new ShootingCommand(0.8, 14000));
   }
 
   /**
@@ -157,13 +173,13 @@ public class Robot extends TimedRobot {
    */
   @Override
   public void teleopPeriodic() {
-    drive_subsystem.tankDrive(oi.driveGetLeftStick(), oi.driveGetRightStick(), 0.95);
-    drive_subsystem.getYaw();
-    turretVal = oi.getLeftTurretAxis();//Get fixed inputs from oi
-    turretVal2 = oi.getRightTurretAxis();
+    RobotContainer.m_drive_subsystem.tankDrive(RobotContainer.m_oi.driveGetLeftStick(), RobotContainer.m_oi.driveGetRightStick(), 0.95);
+    RobotContainer.m_drive_subsystem.getYaw();
+    turretVal = RobotContainer.m_oi.getLeftTurretAxis();//Get fixed inputs from oi
+    turretVal2 = RobotContainer.m_oi.getRightTurretAxis();
 
     turretVal2 = turretVal-turretVal2;//final calculations
-    turret_subsystem.setTurretSpeed(turretVal2, 0.25);
+    RobotContainer.m_turret_subsystem.setTurretSpeed(turretVal2, 0.25);
 
     //Autoaim (toggle)
     if (oi.circle()==true){
@@ -177,21 +193,37 @@ public class Robot extends TimedRobot {
 
     /*
     if (turret_Limelight.canSeeTarget()==false){
+    if (RobotContainer.m_oi.circle()==true){
+      while(RobotContainer.m_oi.circleup()!=true){
+        if (turret_Limelight.canSeeTarget()==false){
           //if there is no target, do nothing
         }else if((turret_Limelight.canSeeTarget()==true)){
           print("yes.");
           double adjust = turret_Limelight.steeringAdjust();//if there is a target, get the distance from it
-          turret_subsystem.setTurretSpeed(adjust, 0.25);//set the speed to that distance, left is negative and right is positive
+          RobotContainer.m_turret_subsystem.setTurretSpeed(adjust, 0.25);//set the speed to that distance, left is negative and right is positive
         }
     */
     //turret_subsystem.feeder(oi.r1());
     turret_subsystem.encoderReset(oi.triangle());
     //intake_subsystem.setFloorSpeed(-oi.square());
-    intake_subsystem.setIntakeSpeed(-oi.x());
-    encoder_subsystem.getPosition();
-    encoder_subsystem.getVelocity();
+    //intake_subsystem.setIntakeSpeed(-oi.x());
+    //encoder_subsystem.getPosition();
+    //encoder_subsystem.getVelocity();
 
     // turret_subsystem.shooterEncoder();
+      }
+    }
+
+   
+    RobotContainer.m_intake_subsystem.setFloorSpeed(-RobotContainer.m_oi.square());
+    RobotContainer.m_intake_subsystem.setIntakeSpeed(-RobotContainer.m_oi.x());
+    RobotContainer.m_turret_subsystem.encoderVal(); //turret encoder
+
+    if(RobotContainer.m_oi.r1()){
+      drive_backward = new DriveBackward(2);
+      drive_backward.schedule();
+    }
+    
   }
 
   @Override

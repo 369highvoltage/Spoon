@@ -8,23 +8,24 @@
 package frc.robot.commands;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
+import frc.robot.RobotContainer;
 import frc.robot.subsystems.DriveSubsystem;
 import frc.robot.subsystems.EncoderSubsystem;
 
 public class DriveForward extends CommandBase {
-  DriveSubsystem drive_subsystem;
-  EncoderSubsystem encoder_subsysem;
+  // DriveSubsystem drive_subsystem;
+  // EncoderSubsystem encoder_subsysem;
   double initialPosition;
   double currentPosition;
   double distance;
   double mod = 0.5;
 
 
-  public DriveForward(DriveSubsystem subsystem, EncoderSubsystem subsystem2, double distanceToTravel) {
-    drive_subsystem = subsystem;
-    encoder_subsysem = subsystem2;
-    addRequirements(drive_subsystem);
-    addRequirements(encoder_subsysem);
+  public DriveForward(double distanceToTravel) {
+  //   drive_subsystem = subsystem;
+  //   encoder_subsysem = subsystem2;
+    // addRequirements(drive_subsystem);
+    // addRequirements(encoder_subsysem);
     distance = -distanceToTravel;
     // System.out.println("dist " + distance);
   }
@@ -33,16 +34,16 @@ public class DriveForward extends CommandBase {
   @Override
   public void initialize() {
     // encoder_subsysem.resetDriveEncoder();
-    initialPosition = encoder_subsysem.getPosition();
-    drive_subsystem.tankDrive(1.0, 1.0, mod);
+    initialPosition = RobotContainer.m_encoder_subsystem.getPosition();
+    RobotContainer.m_drive_subsystem.tankDrive(1.0, 1.0, mod);
   }
 
   // Called repeatedly when this Command is scheduled to run
   @Override
   public void execute() {    
-    currentPosition = encoder_subsysem.getPosition();
+    currentPosition = RobotContainer.m_encoder_subsystem.getPosition();
     // System.out.println("current pos" + currentPosition);
-    drive_subsystem.tankDrive(1.0, 1.0, mod);
+    RobotContainer.m_drive_subsystem.tankDrive(1.0, 1.0, mod);
     /*
     if ((currentPosition - initialPosition) == 0){
       drive_subsystem.tankDrive(1.0, 1.0, mod);
@@ -59,7 +60,7 @@ public class DriveForward extends CommandBase {
   @Override
   public void end(boolean interrupted) {
     // System.out.println("end");
-    drive_subsystem.tankDrive(0.0, 0.0, mod);
+    RobotContainer.m_drive_subsystem.tankDrive(0.0, 0.0, mod);
   }
   
   // Make this return true when this Command no longer needs to run execute()

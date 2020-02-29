@@ -8,7 +8,7 @@
 package frc.robot.commands;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
-
+import frc.robot.RobotContainer;
 import frc.robot.subsystems.DriveSubsystem;
 
 public class TurnLeft extends CommandBase {
@@ -17,12 +17,12 @@ public class TurnLeft extends CommandBase {
   double mod = 0.5;
 
   
-  private final DriveSubsystem drive_subsystem;
+  // private final DriveSubsystem drive_subsystem;
 
-  public TurnLeft(DriveSubsystem subsystem) {
+  public TurnLeft() {
     
-    drive_subsystem = subsystem;
-    addRequirements(drive_subsystem);
+    // drive_subsystem = subsystem;
+    // addRequirements(drive_subsystem);
     // Use addRequirements() here to declare subsystem dependencies.
   }
 
@@ -30,22 +30,22 @@ public class TurnLeft extends CommandBase {
   @Override
   public void initialize() {
     //get value from pigeon
-    pigeonValnit = drive_subsystem.getYaw();
-    drive_subsystem.tankDrive(1.0, -1.0, mod);  
+    pigeonValnit = RobotContainer.m_drive_subsystem.getYaw();
+    RobotContainer.m_drive_subsystem.tankDrive(1.0, -1.0, mod);  
   }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    pigeonVal= drive_subsystem.getYaw();
-    drive_subsystem.tankDrive(1.0, -1.0, mod);   
+    pigeonVal= RobotContainer.m_drive_subsystem.getYaw();
+    RobotContainer.m_drive_subsystem.tankDrive(1.0, -1.0, mod);   
 
   }
 
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
-    drive_subsystem.tankDrive(0.0, 0.0, mod);
+    RobotContainer.m_drive_subsystem.tankDrive(0.0, 0.0, mod);
   }
 
   // Returns true when the command should end.
