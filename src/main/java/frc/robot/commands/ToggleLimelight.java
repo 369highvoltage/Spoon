@@ -1,5 +1,6 @@
 package frc.robot.commands;
 
-public class ToggleLimelight {
-    
+import edu.wpi.first.wpilibj2.command.CommandBase;
+
+public class ToggleLimelight extends CommandBase {
 }

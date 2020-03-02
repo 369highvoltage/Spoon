@@ -4,11 +4,14 @@ import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.wpilibj.shuffleboard.*;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+
+import java.util.function.DoubleSupplier;
+
 import edu.wpi.cscore.HttpCamera;
 import edu.wpi.cscore.MjpegServer;
 
 public class Limelight extends SubsystemBase {
-    private MjpegServer jpeg;
     private NetworkTable table;
     private HttpCamera LLFeed;
     private String LLName;
@@ -23,9 +26,13 @@ public class Limelight extends SubsystemBase {
     }
 
     public double offsetX() {
-        System.out.println(table.getEntry("tx").getDouble(0));
+        //System.out.println(table.getEntry("tx").getDouble(0));
         return table.getEntry("tx").getDouble(0.00);
         
+    }
+
+    public double rotationY() {
+        return table.getEntry("ts").getDouble(0.00);
     }
 
     public double offsetY() {
@@ -41,6 +48,7 @@ public class Limelight extends SubsystemBase {
     }
     //a value between 0 and 1, 0 being on, 1 being off 
     public void setCamMode(int mode) {
+        
         table.getEntry("camMode").setNumber(mode);
     }
     public double steeringAdjust() {
@@ -81,6 +89,14 @@ public class Limelight extends SubsystemBase {
         }
         mainTab.add("LimeLight", LLFeed).withPosition(0, 0).withSize(15, 8);
 
+    }
+
+    public double getDistance() {
+        double h1 = 21;
+        double h2 = offsetY();
+        double a1 = 25;
+        double a2 = rotationY();
+        return  (h2-h1) / Math.tan(a1+a2);
     }
 
 }

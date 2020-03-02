@@ -47,14 +47,7 @@ public class Robot extends TimedRobot {
   private double m_LimelightDriveCommand = 0.0;
   private double m_LimelightSteerCommand = 0.0;
   JoystickButton btn;
-<<<<<<< HEAD
-  DriveForward drive_forward;
-  DriveBackward drive_backward;
-  Limelight turret_Limelight;
-  Limelight intake_Limelight;
-=======
   
->>>>>>> b68aafd91d2ed29c317f0ca133e4bc3ab40888f1
   
  
 
@@ -63,15 +56,6 @@ public class Robot extends TimedRobot {
     m_robotContainer = new RobotContainer();
     // drive_subsystem = new DriveSubsystem();
     //camera_subsystem = new CameraSubsystem();
-<<<<<<< HEAD
-    encoder_subsystem = new EncoderSubsystem();
-    turret_subsystem = new TurretSubsystem();
-    intake_subsystem = new IntakeSubsystem();
-    turret_Limelight = new Limelight("limelight-turret");
-    turret_Limelight = new Limelight("limelight-intake");
-    oi = new OI();
-    btn = new JoystickButton(oi.getController(), 5);
-=======
     // encoder_subsystem = new EncoderSubsystem();
     // turret_subsystem = new TurretSubsystem();
     // intake_subsystem = new IntakeSubsystem();
@@ -82,7 +66,6 @@ public class Robot extends TimedRobot {
     btn = new JoystickButton(RobotContainer.m_oi.getController(), 5);
     autonomus = new AutoTest();
     
->>>>>>> b68aafd91d2ed29c317f0ca133e4bc3ab40888f1
    
 
 
@@ -105,6 +88,7 @@ public class Robot extends TimedRobot {
     // and running subsystem periodic() methods.  This must be called from the robot's periodic
     // block in order for anything in the Command-based framework to work.
     CommandScheduler.getInstance().run();
+    System.out.println(turret_Limelight.getDistance());
   }
 
   /**
