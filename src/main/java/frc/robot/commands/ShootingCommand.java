@@ -10,6 +10,7 @@ package frc.robot.commands;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.TurretSubsystem;
 import frc.robot.subsystems.IntakeSubsystem;
+import frc.robot.RobotContainer;
 
 import com.ctre.phoenix.motorcontrol.can.*; //Talon FX
 import com.ctre.phoenix.motorcontrol.ControlMode;
@@ -22,53 +23,57 @@ import frc.robot.subsystems.*;
 
 
 
+
 public class ShootingCommand extends CommandBase {
   Timer timer;
   boolean buttonPressed;
   double mod;
   double maximum = 17300;
+  double acc;
 
-  TurretSubsystem turret_subsystem;
-  IntakeSubsystem intake_subsystem;
+  // TurretSubsystem turret_subsystem;
+  // IntakeSubsystem intake_subsystem;
   OI oi;
 
+
   
-  public ShootingCommand(TurretSubsystem subsystem, OI subsystem2, double modifier) {
+  public ShootingCommand(double modifier, double accuracy) {
     // if the button is pressed the command runs, modifier is used to regulate the speed of the shooter for now
-    turret_subsystem = subsystem;
-    oi = subsystem2;
-    addRequirements(subsystem);
-    addRequirements(subsystem2);
+    // turret_subsystem = subsystem;
+    // oi = subsystem2;
+    // addRequirements(subsystem);
+    // addRequirements(subsystem2);
     timer = new Timer();
-    turret_subsystem = new TurretSubsystem();
-    intake_subsystem = new IntakeSubsystem();
-    oi = new OI();
+    // turret_subsystem = new TurretSubsystem();
+    // intake_subsystem = new IntakeSubsystem();
+    // oi = new OI();
     mod = modifier;
+    acc = accuracy;
   }
 
   // Called just before this Command runs the first time
   @Override
   public void initialize() {
-    turret_subsystem.shooter(1.0, mod);
+    RobotContainer.m_turret_subsystem.shooter(1.0, mod);
   }
 
   // Called repeatedly when this Command is scheduled to run
   @Override
   public void execute() {
     
-    if (turret_subsystem.shooterEncoder() >= 14000) {//Once at that speed, fire/load balls
+    if (RobotContainer.m_turret_subsystem.shooterEncoder() >= acc) {//Once at that speed, fire/load balls
       //17300 for
       //System.out.println("Execute shooter stuff");
-      turret_subsystem.shooter(1.0,mod);
-      turret_subsystem.feeder(0.75);
-      intake_subsystem.setFloorSpeed(-0.75);
+      RobotContainer.m_turret_subsystem.shooter(1.0,mod);
+      RobotContainer.m_turret_subsystem.feeder(1.0);
+      RobotContainer.m_intake_subsystem.setFloorSpeed(-1.0);
       System.out.println("Shooting "+timer.get());
     } else{
-      turret_subsystem.shooter(1.0,mod);//Charges falcon motors until they reach certain speed
-      SmartDashboard.putNumber("Shooter Speed", turret_subsystem.shooterEncoder());
+      RobotContainer.m_turret_subsystem.shooter(1.0,mod);//Charges falcon motors until they reach certain speed
+      SmartDashboard.putNumber("Shooter Speed", RobotContainer.m_turret_subsystem.shooterEncoder());
       timer.start();//Starts the timer
       }
-      buttonPressed = oi.l1();
+      buttonPressed = RobotContainer.m_oi.l1();
   }
 
 
@@ -76,9 +81,9 @@ public class ShootingCommand extends CommandBase {
   @Override
   public void end(boolean interrupted) {
     //Stops all motors and resets timer
-    turret_subsystem.shooter(0.0, mod);
-    turret_subsystem.feeder(0.0);
-    intake_subsystem.setFloorSpeed(0.0);
+    RobotContainer.m_turret_subsystem.shooter(0.0, mod);
+    RobotContainer.m_turret_subsystem.feeder(0.0);
+    RobotContainer.m_intake_subsystem.setFloorSpeed(0.0);
     timer.reset();
     System.out.println("Ended");
     SmartDashboard.putBoolean("Shooting", false);

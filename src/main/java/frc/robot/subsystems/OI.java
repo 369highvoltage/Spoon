@@ -16,9 +16,11 @@ import frc.robot.subsystems.*;
 
 public class OI extends SubsystemBase {
   public Joystick joy; //creates joy
+  public Joystick joyDrive;
   
   public OI() {
     joy = new Joystick(0); //assigns joy to a joystick
+    joyDrive= new Joystick(1);
   }
 
   public Joystick getController() {
@@ -47,7 +49,7 @@ public class OI extends SubsystemBase {
   getRawButtonPressed for the event and
   getRawButton for the state of the button */
 
-  public double square(){ //floor
+  public double square(){ 
     if (joy.getRawButton(1)){
       return 1.0;
     } else
@@ -76,13 +78,8 @@ public class OI extends SubsystemBase {
     return joy.getRawButton(5);
   }
 
-  public double r1(){ 
-    if (joy.getRawButton(6) == true){
-      return 1.0;
-    }
-    else {
-      return 0.0;
-    }
+  public boolean r1(){ 
+    return joy.getRawButtonPressed(6);
   }
 
   public boolean l2(){ 
@@ -115,5 +112,15 @@ public class OI extends SubsystemBase {
 
   public boolean bigButtonBoi(){
     return joy.getRawButtonPressed(14);
+  }
+
+  //drive joystick
+
+  public double driveGetLeftStick(){ 
+    return joyDrive.getRawAxis(1);
+  }
+
+  public double driveGetRightStick(){ 
+    return joyDrive.getRawAxis(5);
   }
 }

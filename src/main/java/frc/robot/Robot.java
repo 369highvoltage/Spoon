@@ -22,35 +22,48 @@ import edu.wpi.first.networktables.NetworkTableInstance;
 
 
 
-public class Robot extends TimedRobot {
+public class Robot extends TimedRobot {  
   private Command m_autonomousCommand;
   private RobotContainer m_robotContainer;
-  DriveSubsystem drive_subsystem;
-  //CameraSubsystem camera_subsystem;
-  EncoderSubsystem encoder_subsystem;
-  OI oi;
-  TurretSubsystem turret_subsystem;
+  //commands
+  DriveForward drive_forward;
+  DriveBackward drive_backward;
+  TurnLeft turn_left;
+  TurnRight turn_right;
   ShootingCommand shooting_command;
-  IntakeSubsystem intake_subsystem;
+  AutoTest autonomus;
+  //Autonomus1 autonomus1;
+  //subsystem
+  // DriveSubsystem drive_subsystem;
+  Limelight turret_Limelight;
+  // EncoderSubsystem encoder_subsystem;
+  // OI oi;
+  // TurretSubsystem turret_subsystem;
+  // IntakeSubsystem intake_subsystem;
+  //variables
   double turretVal;
   double turretVal2;
   private boolean m_LimelightHasValidTarget = false;
   private double m_LimelightDriveCommand = 0.0;
   private double m_LimelightSteerCommand = 0.0;
-
   JoystickButton btn;
+<<<<<<< HEAD
   DriveForward drive_forward;
   DriveBackward drive_backward;
   Limelight turret_Limelight;
   Limelight intake_Limelight;
+=======
+  
+>>>>>>> b68aafd91d2ed29c317f0ca133e4bc3ab40888f1
   
  
 
   @Override
   public void robotInit() {
     m_robotContainer = new RobotContainer();
-    drive_subsystem = new DriveSubsystem();
+    // drive_subsystem = new DriveSubsystem();
     //camera_subsystem = new CameraSubsystem();
+<<<<<<< HEAD
     encoder_subsystem = new EncoderSubsystem();
     turret_subsystem = new TurretSubsystem();
     intake_subsystem = new IntakeSubsystem();
@@ -58,6 +71,18 @@ public class Robot extends TimedRobot {
     turret_Limelight = new Limelight("limelight-intake");
     oi = new OI();
     btn = new JoystickButton(oi.getController(), 5);
+=======
+    // encoder_subsystem = new EncoderSubsystem();
+    // turret_subsystem = new TurretSubsystem();
+    // intake_subsystem = new IntakeSubsystem();
+    turret_Limelight = new Limelight("Turret");
+    turn_left = new TurnLeft();
+    turn_right = new TurnRight();
+    // oi = new OI();
+    btn = new JoystickButton(RobotContainer.m_oi.getController(), 5);
+    autonomus = new AutoTest();
+    
+>>>>>>> b68aafd91d2ed29c317f0ca133e4bc3ab40888f1
    
 
 
@@ -99,14 +124,13 @@ public class Robot extends TimedRobot {
   @Override
   public void autonomousInit() {
     m_autonomousCommand = m_robotContainer.getAutonomousCommand();
-
     // schedule the autonomous command (example)
     if (m_autonomousCommand != null) {
       m_autonomousCommand.schedule();
     }
-    // some autonomus to test in the future
-    // new DriveForward(drive_subsystem, encoder_subsystem, 2);
-    // new DriveBackward(drive_subsystem, encoder_subsystem, 4);
+
+    autonomus.autonomous1().schedule();
+    
   }
 
   /**
@@ -143,7 +167,7 @@ public class Robot extends TimedRobot {
     //camera_subsystem.ledOff();
     boolean m_LimelightHasValidTarget;
 
-    btn.whenPressed(new ShootingCommand(turret_subsystem, oi, 0.8));
+    btn.whenPressed(new ShootingCommand(0.8, 14000));
   }
 
   /**
@@ -151,58 +175,36 @@ public class Robot extends TimedRobot {
    */
   @Override
   public void teleopPeriodic() {
-    drive_subsystem.tankDrive(oi.getLeftStick(), oi.getRightStick(), 0.95);
-    drive_subsystem.getYaw();
-    //drive_subsystem.tankDrive(oi.getLeftStick(), oi.getRightStick(),1);
-    //print("Encoder position is"+encoder_subsystem.getPosition());
-    //print("Encoder velocity is"+encoder_subsystem.getVelocity());
-    print("encoder pos is" + turret_subsystem.encoderVal());
-    turretVal = oi.getLeftTurretAxis();//Get fixed inputs from oi
-    turretVal2 = oi.getRightTurretAxis();
-    /*
-    if (turret_subsystem.encoderVal()>=8000){//If the encoder value is greater than 8000, do this
-      while ((turret_subsystem.encoderVal()>=8000)&&(turretVal2>=.1)){// if the value is above 8000, and trying to turn right
-        turretVal2 = 0;//reduce right input
-        print("Above 8000 enc value, turret is"+turretVal2);
-      }
-    }
-    if (turret_subsystem.encoderVal()<=-8000){
-      while ((turret_subsystem.encoderVal()<=-8000)&&(turretVal2<=-.1)){
-        turretVal = 0;//reduce left input
-        print("Below -8000 enc value, turret is"+turretVal);
-      }
-    }
-    */
+    RobotContainer.m_drive_subsystem.tankDrive(RobotContainer.m_oi.driveGetLeftStick(), RobotContainer.m_oi.driveGetRightStick(), 0.95);
+    RobotContainer.m_drive_subsystem.getYaw();
+    turretVal = RobotContainer.m_oi.getLeftTurretAxis();//Get fixed inputs from oi
+    turretVal2 = RobotContainer.m_oi.getRightTurretAxis();
+
     turretVal2 = turretVal-turretVal2;//final calculations
-    turret_subsystem.setTurretSpeed(turretVal2, 0.25);
+    RobotContainer.m_turret_subsystem.setTurretSpeed(turretVal2, 0.25);
 
     //Autoaim (toggle)
-    if (oi.circle()==true){
-      print("pressed");
-      while(oi.circleup()!=true){
+    if (RobotContainer.m_oi.circle()==true){
+      while(RobotContainer.m_oi.circleup()!=true){
+        if (turret_Limelight.canSeeTarget()==false){
+          //if there is no target, do nothing
+        }else if((turret_Limelight.canSeeTarget()==true)){
           double adjust = turret_Limelight.steeringAdjust();//if there is a target, get the distance from it
-          turret_subsystem.setTurretSpeed(adjust, 0.25);//set the speed to that distance, left is negative and right is positive
+          RobotContainer.m_turret_subsystem.setTurretSpeed(adjust, 0.25);//set the speed to that distance, left is negative and right is positive
+        }
       }
     }
 
-    /*
-    if (turret_Limelight.canSeeTarget()==false){
-          //if there is no target, do nothing
-        }else if((turret_Limelight.canSeeTarget()==true)){
-          print("yes.");
-          double adjust = turret_Limelight.steeringAdjust();//if there is a target, get the distance from it
-          turret_subsystem.setTurretSpeed(adjust, 0.25);//set the speed to that distance, left is negative and right is positive
-        }
-    */
-    turret_subsystem.feeder(oi.r1());
-    turret_subsystem.encoderReset(oi.triangle());
-    intake_subsystem.setFloorSpeed(-oi.square());
-    intake_subsystem.setIntakeSpeed(-oi.x());
-    encoder_subsystem.getPosition();
-    encoder_subsystem.getVelocity();
+   
+    RobotContainer.m_intake_subsystem.setFloorSpeed(-RobotContainer.m_oi.square());
+    RobotContainer.m_intake_subsystem.setIntakeSpeed(-RobotContainer.m_oi.x());
+    RobotContainer.m_turret_subsystem.encoderVal(); //turret encoder
 
-    // turret_subsystem.shooterEncoder();
-
+    if(RobotContainer.m_oi.r1()){
+      drive_backward = new DriveBackward(2);
+      drive_backward.schedule();
+    }
+    
   }
 
   @Override

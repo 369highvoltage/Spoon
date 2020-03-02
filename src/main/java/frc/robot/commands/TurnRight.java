@@ -6,7 +6,7 @@
 /*----------------------------------------------------------------------------*/
 
 package frc.robot.commands;
-
+import frc.robot.RobotContainer;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 
 import frc.robot.subsystems.DriveSubsystem;
@@ -14,14 +14,15 @@ import frc.robot.subsystems.DriveSubsystem;
 public class TurnRight extends CommandBase {
   double pigeonVal;
   double pigeonValnit;
+  double mod = 0.5;
 
   
-  private final DriveSubsystem drive_subsystem;
+  // private final DriveSubsystem drive_subsystem;
 
-  public TurnRight(DriveSubsystem subsystem) {
+  public TurnRight() {
     
-    drive_subsystem = subsystem;
-    addRequirements(drive_subsystem);
+    // drive_subsystem = subsystem;
+    // addRequirements(drive_subsystem);
     // Use addRequirements() here to declare subsystem dependencies.
   }
 
@@ -29,14 +30,15 @@ public class TurnRight extends CommandBase {
   @Override
   public void initialize() {
     //get value from pigeon
-    pigeonValnit = drive_subsystem.getYaw();
+    pigeonValnit = RobotContainer.m_drive_subsystem.getYaw();    
+    RobotContainer.m_drive_subsystem.tankDrive(-1.0, 1.0, mod);  
   }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    pigeonVal= drive_subsystem.getYaw();
-    drive_subsystem.tankDrive(1.0, -1.0, 1.0);
+    pigeonVal= RobotContainer.m_drive_subsystem.getYaw();
+    RobotContainer.m_drive_subsystem.tankDrive(-1.0, 1.0, mod);
     //if (pigeonVal > pigeonValnit-90) {
     //} 
 
@@ -45,7 +47,7 @@ public class TurnRight extends CommandBase {
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
-    drive_subsystem.tankDrive(0.0, 0.0, 1.0);
+    RobotContainer.m_drive_subsystem.tankDrive(0.0, 0.0, mod);
   }
 
   // Returns true when the command should end.
