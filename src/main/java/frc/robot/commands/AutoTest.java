@@ -15,23 +15,31 @@ import frc.robot.RobotContainer;
 /**
  * Add your docs here.
  */
-public class AutoTest {
+public class AutoTest { //groups of autonomus commands that do different tasks
     public Command autonomous1() {
+        System.out.println("autonomus1");
         return new SequentialCommandGroup(
             new DriveForward(2),
-            new DriveBackward(4),
-            new TurnLeft(),
-            new InstantCommand(() -> RobotContainer.m_intake_subsystem.setIntakeSpeed(1.0))
+            new AutoShooting(0.8, 14000, 1.5),
+            new IntakeCommand(2),
+            new AutoShooting(0.8, 14000, 1.5),
+            new TurnLeft(35, 1),
+            new DriveForward(5),
+            new TurnRight(-48,1),
+            new ParallelCommandGroup(
+                new DriveForward(9),
+                new IntakeCommand(5)),
+            new AutoShooting(0.8, 14000, 2)
         );
     }
 
-    // public Command autonomous2() {
-    //     // return new SequentialCommandGroup(
-    //     //     new DriveForward(drive_subsystem, encoder_subsystem, 2),
-    //     //     new DriveBackward(drive_subsystem, encoder_subsystem, 4),
-    //     //     new TurnLeft(drive_subsystem),
-    //     //     new InstantCommand(() -> intake_subsystem.setIntakeSpeed(1.0))
-    //     // );
-    // }
+    public Command autonomous2() {
+        System.out.println("autonomus2");
+        return new ParallelCommandGroup(
+            new DriveForward(4),
+            new IntakeCommand(4)
+            
+        );
+    }
 }
 
