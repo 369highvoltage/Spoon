@@ -51,10 +51,31 @@ public class Limelight extends SubsystemBase {
         
         table.getEntry("camMode").setNumber(mode);
     }
+
+    public void setLightPipeline() {
+
+    }
+
+    // public double steeringAdjust() {
+    //     float kp = -.05f;//Adjusts the value returned from Limelight
+    //     float minCommand = .005f;//Minimum value a value can have
+    //     float steeringAdjust = 0.05f;//Default value of adjust
+    //     float tx = (float)offsetX();
+    //     //SmartDashboard.setDefaultNumber("TX", tx);
+    //     float headingError = -tx;
+      
+    //     if(tx > 1) {
+    //         steeringAdjust = kp*headingError -minCommand;
+    //     }else if (tx < 1){
+    //         steeringAdjust = kp*headingError + minCommand;
+    //     }
+    //     return steeringAdjust;
+    //   }
+
     public double steeringAdjust() {
-        float kp = -.05f;//Adjusts the value returned from Limelight
-        float minCommand = .005f;//Minimum value a value can have
-        float steeringAdjust = 0.05f;//Default value of adjust
+        float kp = -.1f;//Adjusts the value returned from Limelight
+        float minCommand = .01f;//Minimum value a value can have
+        float steeringAdjust = 0.077f;//Default value of adjust
         float tx = (float)offsetX();
         //SmartDashboard.setDefaultNumber("TX", tx);
         float headingError = -tx;
@@ -64,6 +85,11 @@ public class Limelight extends SubsystemBase {
         }else if (tx < 1){
             steeringAdjust = kp*headingError + minCommand;
         }
+            if(steeringAdjust > 1){
+                steeringAdjust = 1;
+            }else if(steeringAdjust < -1){
+                steeringAdjust = -1;
+            }
         return steeringAdjust;
       }
 

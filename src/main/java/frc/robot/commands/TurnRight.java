@@ -8,6 +8,7 @@
 package frc.robot.commands;
 import frc.robot.RobotContainer;
 import edu.wpi.first.wpilibj2.command.CommandBase;
+import edu.wpi.first.wpilibj.Timer;
 
 import frc.robot.subsystems.DriveSubsystem;
 
@@ -15,44 +16,64 @@ public class TurnRight extends CommandBase {
   double pigeonVal;
   double pigeonValnit;
   double mod = 0.5;
+  double targetDegrees;
+  double P=0.1, I=0, D =0;
+  int integral, previous_error;
+  double error, derivative, rcw, time, currTime;
+  Timer timer;
 
   
   // private final DriveSubsystem drive_subsystem;
 
-  public TurnRight() {
-    
+  public TurnRight(double targetDegrees, double time) {
+    this.targetDegrees = targetDegrees;
+    this.time = time;
+    timer = new Timer();
     // drive_subsystem = subsystem;
     // addRequirements(drive_subsystem);
     // Use addRequirements() here to declare subsystem dependencies.
+  }
+
+  public void setTest(double P, double I, double D){
+    
+    this.P = P;
+    this.I = I;
+    this.D = D;
+    
   }
 
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
     //get value from pigeon
-    pigeonValnit = RobotContainer.m_drive_subsystem.getYaw();    
-    RobotContainer.m_drive_subsystem.tankDrive(-1.0, 1.0, mod);  
+    RobotContainer.m_drive_subsystem.pigeonReset();
+    timer.start();
   }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    pigeonVal= RobotContainer.m_drive_subsystem.getYaw();
-    RobotContainer.m_drive_subsystem.tankDrive(-1.0, 1.0, mod);
-    //if (pigeonVal > pigeonValnit-90) {
-    //} 
+    error = targetDegrees - RobotContainer.m_drive_subsystem.getYaw(); // Error = Target - Actual
+    integral += (error*.02); // Integral is increased by the error*time (which is .02 seconds using normal IterativeRobot)
+    derivative = (error - previous_error) / .02;
+    rcw = P*error + I*integral + D*derivative;
+    System.out.println(rcw);
 
+    double clamped = Math.max(Math.min(0.5, rcw), -0.5);
+    RobotContainer.m_drive_subsystem.arcadeDrive(0, clamped);
+    currTime = timer.get();
   }
 
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
     RobotContainer.m_drive_subsystem.tankDrive(0.0, 0.0, mod);
+    timer.reset();
   }
 
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return pigeonVal < pigeonValnit-90;
+    return (currTime >= time);
   }
 }

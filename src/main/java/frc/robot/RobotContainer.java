@@ -9,6 +9,8 @@ package frc.robot;
 
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.XboxController;
+import frc.robot.commands.AutoTest;
+import frc.robot.commands.AutonomousV1;
 import frc.robot.commands.ExampleCommand;
 import frc.robot.subsystems.ExampleSubsystem;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -32,6 +34,8 @@ public class RobotContainer {
   public static TurretSubsystem m_turret_subsystem = new TurretSubsystem();
 
   private final ExampleCommand m_autoCommand = new ExampleCommand(m_exampleSubsystem);
+  // private final AutoTest m_auto_test = new AutoTest();
+  // private final AutonomousV1 m_autonomousV1 = new AutonomousV1();
 
 
 
