@@ -118,10 +118,12 @@ public class Limelight extends SubsystemBase {
     }
 
     public double getDistance() {
-        double h1 = 21;
+        double h1 = 53.34;
         double h2 = offsetY();
         double a1 = 25;
         double a2 = rotationY();
+        System.out.println("a2 is "+rotationY());
+        System.out.println("Divisible sum is "+Math.tan(a1+a2));
         return  (h2-h1) / Math.tan(a1+a2);
     }
 

@@ -97,7 +97,6 @@ public class Robot extends TimedRobot {
     // and running subsystem periodic() methods.  This must be called from the robot's periodic
     // block in order for anything in the Command-based framework to work.
     CommandScheduler.getInstance().run();
-    System.out.println(turret_Limelight.getDistance());
   }
 
   /**
@@ -151,6 +150,7 @@ public class Robot extends TimedRobot {
     double mindistance = 5;
     leftAdjust -= turret_Limelight.steeringAdjust();//adjust each side according to tx
     rightAdjust += turret_Limelight.steeringAdjust();
+    System.out.println(turret_Limelight.getDistance());
 /*
      if(Math.abs(camera_subsystem.getTy()) <= mindistance){//checks if the height is less than five, if it is stop 
        drive_subsystem.tankDrive(0, 0, 1);
@@ -185,6 +185,7 @@ public class Robot extends TimedRobot {
   @Override
   public void teleopPeriodic() {
     System.out.println("teleop periodic");
+    System.out.println(turret_Limelight.getDistance());
     RobotContainer.m_drive_subsystem.tankDrive(RobotContainer.m_oi.driveGetLeftStick(), RobotContainer.m_oi.driveGetRightStick(), 0.95);
     RobotContainer.m_drive_subsystem.getYaw();
     turretVal = RobotContainer.m_oi.getLeftTurretAxis();//Get fixed inputs from oi
@@ -196,14 +197,11 @@ public class Robot extends TimedRobot {
     //Autoaim (toggle)
     if (RobotContainer.m_oi.circle()==true){
       while(RobotContainer.m_oi.circleup()!=true){
-        if (turret_Limelight.canSeeTarget()==false){
-          //if there is no target, do nothing
-        }else if((turret_Limelight.canSeeTarget()==true)){
           double adjust = turret_Limelight.steeringAdjust();//if there is a target, get the distance from it
-          RobotContainer.m_turret_subsystem.setTurretSpeed(adjust, 0.25);//set the speed to that distance, left is negative and right is positive
+          RobotContainer.m_turret_subsystem.setTurretSpeed(-adjust, 0.25);//set the speed to that distance, left is negative and right is positive
         }
       }
-    }
+    
 
    
     RobotContainer.m_intake_subsystem.setFloorSpeed(-RobotContainer.m_oi.square());
