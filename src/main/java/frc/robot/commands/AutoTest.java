@@ -16,28 +16,43 @@ import frc.robot.RobotContainer;
  * Add your docs here.
  */
 public class AutoTest { //groups of autonomus commands that do different tasks
-    public Command autonomous1() {
-        System.out.println("autonomus1");
+    public Command autonomous1() { //6 lemon auto right side of the field
+        System.out.println("autonomous1");
         return new SequentialCommandGroup(
-            new DriveForward(2),
-            new AutoShooting(0.8, 14000, 1.5),
-            new IntakeCommand(2),
-            new AutoShooting(0.8, 14000, 1.5),
-            new TurnLeft(35, 1),
-            new DriveForward(5),
+            new DriveForward(2, 0.75), //drops the intake
+            new ParallelCommandGroup( //shoots 3 lemons
+                new AutoShooting(0.8, 14000, 2),
+                new IntakeCommand(2)),
+            new TurnLeft(35, 1), //turns to the trench
+            new DriveForward(7, 0.75),
             new TurnRight(-48,1),
-            new ParallelCommandGroup(
-                new DriveForward(9),
-                new IntakeCommand(5)),
-            new AutoShooting(0.8, 14000, 2)
+            new ParallelCommandGroup( //collects 3 lemons from the trench
+                new IntakeCommand(5),
+                new DriveForward(9, 0.3)
+                ),
+            new ParallelCommandGroup( //shoot 3 lemons from the trench
+                new AutoShooting(0.9, 14000, 2),
+                new IntakeCommand(2)            
+            )            
         );
     }
 
-    public Command autonomous2() {
+    public Command autonomous2() { //start in the middle of the field
         System.out.println("autonomus2");
-        return new ParallelCommandGroup(
-            new DriveForward(4),
-            new IntakeCommand(4)
+        return new SequentialCommandGroup(
+            new DriveForward(2, 0.75), //drops the intake
+            new ParallelCommandGroup( //shoots 3 lemons
+                new AutoShooting(0.8, 14000, 2),
+                new IntakeCommand(2)),
+            new DriveForward(5.0, 0.75),//drives back to the randezvous point 
+            new ParallelCommandGroup( //collent lemons
+                new DriveForward(2.6, 0.3),
+                new IntakeCommand(2)
+            ),
+            new ParallelCommandGroup( //shoots leoms
+                new AutoShooting(0.9, 14000, 3),
+                new IntakeCommand(3)
+            )
             
         );
     }
