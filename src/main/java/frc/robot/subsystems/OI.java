@@ -20,7 +20,7 @@ public class OI extends SubsystemBase {
   
   public OI() {
     joy = new Joystick(0); //assigns joy to a joystick
-    joyDrive= new Joystick(1);
+    joyDrive = new Joystick(1);
   }
 
   public Joystick getController() {
