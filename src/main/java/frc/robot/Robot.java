@@ -22,7 +22,7 @@ import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.networktables.NetworkTableInstance;
 
-
+import edu.wpi.first.wpilibj.DriverStation; // Import to get communications from DriverStation
 
 public class Robot extends TimedRobot {  
   private Command m_autonomousCommand;
@@ -114,28 +114,31 @@ public class Robot extends TimedRobot {
    */
   @Override
   public void autonomousInit() {
+    switch(DriverStation.getInstance().getLocation()) {
+      case 1:
+        System.out.println("Left side")
+        m_autonomousCommand = new AutoTest().autonomous1();
+        break;
+      case 2:
+        System.out.println("Middle");
+        m_autonomousCommand = new AutoTest().autonomous2();
+        break;
+      case 3:
+        System.out.println("Right Side");
+        // Case 3 logic here
+        break;
+      default:
+        System.out.println("No Autonomous found");
+        break;
+    }
+
+
     System.out.println("auto init");
     m_autonomousCommand = m_robotContainer.getAutonomousCommand();
     // schedule the autonomous command (example)
     if (m_autonomousCommand != null) {
       m_autonomousCommand.schedule();
     }
-
-    // autonomus.autonomous1().schedule();
-    // autonomus.autonomous2().schedule();
-    // autonomousV1.AutonomousV1().schedule();
-    new AutoTest().autonomous1().schedule();
-    // testing pid values
-    // System.out.println(turnin_pid_table.getEntry("kP").getDouble(1));
-    // System.out.println(turnin_pid_table.getEntry("kI").getDouble(0));
-    // System.out.println(turnin_pid_table.getEntry("kD").getDouble(0));
-    // TurnLeft tl = new TurnLeft(90.0);
-    // tl.setTest(
-    //   turnin_pid_table.getEntry("kP").getDouble(1),
-    //   turnin_pid_table.getEntry("kI").getDouble(0),
-    //   turnin_pid_table.getEntry("kD").getDouble(0)
-    // );
-    // tl.schedule();
   }
 
   /**
