@@ -56,7 +56,7 @@ public class DriveSubsystem extends SubsystemBase { //create variables are here
 
   public double getYaw(){
     pigeon.getYawPitchRoll(ypr);
-    System.out.println("Yaw= " + ypr[0]);
+    // System.out.println("Yaw= " + ypr[0]);
     return ypr[0];
   }
 
