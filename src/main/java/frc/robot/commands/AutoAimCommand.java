@@ -54,7 +54,7 @@ public class AutoAimCommand extends CommandBase {
   @Override
   public boolean isFinished() {
     System.out.println("autoaim is finished");
-    return !button;
+    return (button);
   }
 
 }

@@ -38,7 +38,7 @@ public class ShootingCommand extends CommandBase {
 
   
   public ShootingCommand(double modifier, double accuracy) {
-    System.out.println("constr ");
+    // System.out.println("constr ");
     // if the button is pressed the command runs, modifier is used to regulate the speed of the shooter for now
     // turret_subsystem = subsystem;
     // oi = subsystem2;
@@ -55,14 +55,14 @@ public class ShootingCommand extends CommandBase {
   // Called just before this Command runs the first time
   @Override
   public void initialize() {
-    System.out.println("init ");
+    // System.out.println("init ");
     RobotContainer.m_turret_subsystem.shooter(1.0, mod);
   }
 
   // Called repeatedly when this Command is scheduled to run
   @Override
   public void execute() {
-    System.out.println(" exec");
+    // System.out.println(" exec");
     
     if (RobotContainer.m_turret_subsystem.shooterEncoder() >= acc) {//Once at that speed, fire/load balls
       //17300 for
@@ -70,7 +70,7 @@ public class ShootingCommand extends CommandBase {
       RobotContainer.m_turret_subsystem.shooter(1.0,mod);
       RobotContainer.m_turret_subsystem.feeder(1.0);
       RobotContainer.m_intake_subsystem.setFloorSpeed(-1.0);
-      System.out.println("Shooting "+timer.get());
+      // System.out.println("Shooting "+timer.get());
     } else{
       RobotContainer.m_turret_subsystem.shooter(1.0,mod);//Charges falcon motors until they reach certain speed
       SmartDashboard.putNumber("Shooter Speed", RobotContainer.m_turret_subsystem.shooterEncoder());
@@ -83,23 +83,23 @@ public class ShootingCommand extends CommandBase {
   // Called once after isFinished returns true
   @Override
   public void end(boolean interrupted) {
-    System.out.println(" end");
+    // System.out.println(" end");
     //Stops all motors and resets timer
     RobotContainer.m_turret_subsystem.shooter(0.0, mod);
     RobotContainer.m_turret_subsystem.feeder(0.0);
     RobotContainer.m_intake_subsystem.setFloorSpeed(0.0);
     timer.reset();
-    System.out.println("Ended");
+    // System.out.println("Ended");
     SmartDashboard.putBoolean("Shooting", false);
   }
 
   // Make this return true when this Command no longer needs to run execute()
   @Override
   public boolean isFinished() {
-    System.out.println(" is finished");
+    // System.out.println(" is finished");
     if(buttonPressed==false) {
     //if(buttonPressed==false){//if there is no more input, stop shooting
-      System.out.println("Disabled");
+      // System.out.println("Disabled");
       return true;
     }else{
       SmartDashboard.putBoolean("Shooting", buttonPressed);//Displays shooting status

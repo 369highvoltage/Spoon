@@ -178,7 +178,7 @@ public class Robot extends TimedRobot {
     boolean m_LimelightHasValidTarget;
 
     btn.whenPressed(new ShootingCommand(0.85, 14000));
-    circle.whenPressed(new AutoAimCommand(turret_Limelight, RobotContainer.m_oi.circle()));
+    circle.whileHeld(new AutoAimCommand(turret_Limelight, RobotContainer.m_oi.circle()));
     
     // System.out.println("teleop init");
   }
@@ -188,7 +188,7 @@ public class Robot extends TimedRobot {
    */
   @Override
   public void teleopPeriodic() {
-    // System.out.println("teleop periodic");
+    // System.out.println("circle is "+ RobotContainer.m_oi.circle());
     RobotContainer.m_drive_subsystem.tankDrive(RobotContainer.m_oi.driveGetLeftStick(), RobotContainer.m_oi.driveGetRightStick(), 0.95);
     RobotContainer.m_drive_subsystem.getYaw();
     turretVal = RobotContainer.m_oi.getLeftTurretAxis();//Get fixed inputs from oi
