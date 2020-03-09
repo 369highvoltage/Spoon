@@ -136,8 +136,8 @@ public class Limelight extends SubsystemBase {
         double h2 = offsetY(); //position offset (on Y axis) of target
         double a1 = 25; //Angle of Limelight mounted
         double a2 = rotationY(); //rotation offset of target (on Y axis)
-        System.out.println("Angle To Target: "+rotationY());
-        System.out.println("Denom: "+Math.tan(a1+a2));
+        // System.out.println("Angle To Target: "+rotationY());
+        // System.out.println("Denom: "+Math.tan(a1+a2));
         return  (h2-h1) / Math.tan(a1+a2);
     }
 
