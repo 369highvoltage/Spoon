@@ -204,6 +204,8 @@ public class Robot extends TimedRobot {
     // System.out.println("circle is "+ RobotContainer.m_oi.circle());
 
     RobotContainer.m_drive_subsystem.tankDrive(RobotContainer.m_oi.driveGetLeftStick(), RobotContainer.m_oi.driveGetRightStick(), 0.95);
+    RobotContainer.m_drive_subsystem.tankDrive(RobotContainer.m_oi.driveL1(), RobotContainer.m_oi.driveL1(), 0.5);
+    RobotContainer.m_drive_subsystem.tankDrive(-RobotContainer.m_oi.driveR1(), -RobotContainer.m_oi.driveR1(), 0.5);
     RobotContainer.m_drive_subsystem.getYaw();
     turretVal = RobotContainer.m_oi.getLeftTurretAxis();//Get fixed inputs from oi
     turretVal2 = RobotContainer.m_oi.getRightTurretAxis();

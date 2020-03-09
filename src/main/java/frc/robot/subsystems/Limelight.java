@@ -86,7 +86,7 @@ public class Limelight extends SubsystemBase {
     //   }
 
     public double steeringAdjust() {
-        float kp = -.1f;//Adjusts the value returned from Limelight
+        float kp = -.05f;//Adjusts the value returned from Limelight
         float minCommand = .01f;//Minimum value a value can have
         float steeringAdjust = 0.077f;//Default value of adjust
         float tx = (float)offsetX();
