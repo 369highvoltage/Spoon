@@ -183,10 +183,9 @@ public class Robot extends TimedRobot {
 
     //Autoaim (toggle)
     if (oi.circle()==true){
-      print("pressed");
       while(oi.circleup()!=true){
           double adjust = turret_Limelight.steeringAdjust();//if there is a target, get the distance from it
-          print("Adjust is "+adjust);
+          //print("Adjust is "+adjust);
           turret_subsystem.setTurretSpeed(-adjust, 0.25);//set the speed to that distance, left is negative and right is positive
       }
     }
