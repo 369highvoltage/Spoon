@@ -40,7 +40,7 @@ public class AutoTest { //groups of autonomus commands that do different tasks
     public Command autonomous2() { //start in the middle of the field
         System.out.println("autonomus2");
         return new SequentialCommandGroup(
-            new DriveForward(2, 0.75), //drops the intake
+            new DriveForward(2, 0.75), //drops the intake //yeet
             new ParallelCommandGroup( //shoots 3 lemons
                 new AutoShooting(0.8, 14000, 2),
                 new IntakeCommand(2)),
