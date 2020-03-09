@@ -26,11 +26,11 @@ public class AutoTest { //groups of autonomus commands that do different tasks
             new TurnLeft(35, 1), //turns to the trench
             new DriveForward(5.5, 0.75),
             new TurnRight(-48,1),
-            new ParallelCommandGroup( //collects 3 lemons from the trench
-                new IntakeCommand(6),
-                new DriveForward(9, 0.3)
+            new ParallelCommandGroup( //collects 2 lemons from the trench
+                new IntakeCommand(4),
+                new DriveForward(6, 0.3)
                 ),
-            new ParallelCommandGroup( //shoot 3 lemons from the trench
+            new ParallelCommandGroup( //shoot 2 lemons from the trench
                 new AutoShooting(0.9, 14000, 2),
                 new IntakeCommand(2)            
             )            

@@ -218,7 +218,7 @@ public class Robot extends TimedRobot {
     if (RobotContainer.m_oi.share()){
       RobotContainer.m_turret_subsystem.feeder(-1.0);
       RobotContainer.m_intake_subsystem.setFloorSpeed(-1.0);
-      RobotContainer.m_intake_subsystem.setIntakeSpeed(-1.0);
+      RobotContainer.m_intake_subsystem.setIntakeSpeed(1.0);
     }
 
     // if (RobotContainer.m_oi.circle()){
