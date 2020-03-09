@@ -38,6 +38,7 @@ public class AutoAimCommand extends CommandBase {
   public void execute() {
     System.out.println("autoaim exec ");
     adjust = limelight_subsystem.steeringAdjust();
+    System.out.println("stadj returned"+adjust);
     RobotContainer.m_turret_subsystem.setTurretSpeed(-adjust, 0.25);
   }
 

@@ -92,7 +92,7 @@ public class Limelight extends SubsystemBase {
         float tx = (float)offsetX();
         //SmartDashboard.setDefaultNumber("TX", tx);
         float headingError = -tx;
-      
+        System.out.println(tx);
         if(tx > 1) {
             steeringAdjust = kp*headingError -minCommand;
         }else if (tx < 1){

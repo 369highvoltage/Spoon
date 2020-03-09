@@ -50,6 +50,8 @@ public class Robot extends TimedRobot {
   //variables
   double turretVal;
   double turretVal2;
+  double movementValLeft;
+  double movementValRight;
   private boolean m_LimelightHasValidTarget = false;
   private double m_LimelightDriveCommand = 0.0;
   private double m_LimelightSteerCommand = 0.0;
@@ -186,7 +188,7 @@ public class Robot extends TimedRobot {
     //camera_subsystem.ledOff();
     boolean m_LimelightHasValidTarget;
 
-    btn.whenPressed(new ShootingCommand(0.85, 14000));
+    btn.whenPressed(new ShootingCommand(0.89, 14500));
     circle.whileHeld(new AutoAimCommand(turret_Limelight, RobotContainer.m_oi.circle()));
     
     // System.out.println("teleop init");
@@ -198,14 +200,16 @@ public class Robot extends TimedRobot {
   @Override
   public void teleopPeriodic() {
 
-    System.out.println("teleop periodic");
-    System.out.println(turret_Limelight.getDistance());
+    // System.out.println("teleop periodic");
+    // System.out.println(turret_Limelight.getDistance());
 
     // System.out.println("circle is "+ RobotContainer.m_oi.circle());
-
-    RobotContainer.m_drive_subsystem.tankDrive(RobotContainer.m_oi.driveGetLeftStick(), RobotContainer.m_oi.driveGetRightStick(), 0.95);
-    RobotContainer.m_drive_subsystem.tankDrive(RobotContainer.m_oi.driveL1(), RobotContainer.m_oi.driveL1(), 0.5);
-    RobotContainer.m_drive_subsystem.tankDrive(-RobotContainer.m_oi.driveR1(), -RobotContainer.m_oi.driveR1(), 0.5);
+    movementValLeft = RobotContainer.m_oi.driveGetLeftStick() + RobotContainer.m_oi.driveL1()/2 + (-RobotContainer.m_oi.driveR1()/2);
+    movementValRight = RobotContainer.m_oi.driveGetRightStick() + RobotContainer.m_oi.driveL1()/2 + (-RobotContainer.m_oi.driveR1()/2);
+    
+    //RobotContainer.m_drive_subsystem.tankDrive(RobotContainer.m_oi.driveGetLeftStick(), RobotContainer.m_oi.driveGetRightStick(), 0.95);
+    RobotContainer.m_drive_subsystem.tankDrive(movementValLeft, movementValRight, 0.85);
+  
     RobotContainer.m_drive_subsystem.getYaw();
     turretVal = RobotContainer.m_oi.getLeftTurretAxis();//Get fixed inputs from oi
     turretVal2 = RobotContainer.m_oi.getRightTurretAxis();
