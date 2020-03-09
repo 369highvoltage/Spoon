@@ -20,7 +20,7 @@ public class OI extends SubsystemBase {
   
   public OI() {
     joy = new Joystick(0); //assigns joy to a joystick
-    joyDrive= new Joystick(1);
+    joyDrive = new Joystick(1);
   }
 
   public Joystick getController() {
@@ -66,7 +66,7 @@ public class OI extends SubsystemBase {
   public boolean circle(){ //autoaim
     return joy.getRawButton(3);
   }
-  public boolean circleup(){
+  public boolean isCircleUp(){
     return joy.getRawButtonReleased(3);
   }
 
@@ -106,11 +106,11 @@ public class OI extends SubsystemBase {
     return joy.getRawButtonPressed(12);
   }
 
-  public boolean pspsps(){ 
+  public boolean home(){ 
     return joy.getRawButtonPressed(13);
   }
 
-  public boolean bigButtonBoi(){
+  public boolean rectangleBoi(){
     return joy.getRawButtonPressed(14);
   }
 

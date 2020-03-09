@@ -83,7 +83,8 @@ public class Robot extends TimedRobot {
 
 
     //settings when the robot turns on
-    
+    //turret_Limelight.Vision();
+    //intake_Limelight.Vision();
   }
 
   /**
@@ -153,6 +154,8 @@ public class Robot extends TimedRobot {
     double mindistance = 5;
     leftAdjust -= turret_Limelight.steeringAdjust();//adjust each side according to tx
     rightAdjust += turret_Limelight.steeringAdjust();
+    System.out.println(turret_Limelight.getDistance());
+    controlSet1();
 /*
      if(Math.abs(camera_subsystem.getTy()) <= mindistance){//checks if the height is less than five, if it is stop 
        drive_subsystem.tankDrive(0, 0, 1);
@@ -188,14 +191,25 @@ public class Robot extends TimedRobot {
    */
   @Override
   public void teleopPeriodic() {
+
+    System.out.println("teleop periodic");
+    System.out.println(turret_Limelight.getDistance());
+
     // System.out.println("circle is "+ RobotContainer.m_oi.circle());
+
     RobotContainer.m_drive_subsystem.tankDrive(RobotContainer.m_oi.driveGetLeftStick(), RobotContainer.m_oi.driveGetRightStick(), 0.95);
     RobotContainer.m_drive_subsystem.getYaw();
     turretVal = RobotContainer.m_oi.getLeftTurretAxis();//Get fixed inputs from oi
     turretVal2 = RobotContainer.m_oi.getRightTurretAxis();
 
     turretVal2 = turretVal-turretVal2;//final calculations
+    RobotContainer.m_intake_subsystem.setFloorSpeed(RobotContainer.m_oi.square());
+    RobotContainer.m_intake_subsystem.setIntakeSpeed(-RobotContainer.m_oi.x());
     RobotContainer.m_turret_subsystem.setTurretSpeed(turretVal2, 0.25);
+    RobotContainer.m_turret_subsystem.encoderVal(); //turret encoder  
+
+
+    controlSet1();
 
     //Autoaim (toggle)
     // if (RobotContainer.m_oi.circle()==true){
@@ -206,10 +220,8 @@ public class Robot extends TimedRobot {
     //   }
     // }
 
+
    
-    RobotContainer.m_intake_subsystem.setFloorSpeed(RobotContainer.m_oi.square());
-    RobotContainer.m_intake_subsystem.setIntakeSpeed(-RobotContainer.m_oi.x());
-    RobotContainer.m_turret_subsystem.encoderVal(); //turret encoder
 
     if(RobotContainer.m_oi.r1()){
       RobotContainer.m_turret_subsystem.encoderReset();
@@ -228,6 +240,7 @@ public class Robot extends TimedRobot {
    
     
     
+
   }
 
   @Override
@@ -248,4 +261,32 @@ public class Robot extends TimedRobot {
     System.out.println(value);
   }
   
+  public void controlSet1() { //Testing Setup
+
+    //Autoaim (toggle)
+    if (RobotContainer.m_oi.circle()==true){
+      while(RobotContainer.m_oi.isCircleUp()!=true){
+          double adjust = turret_Limelight.steeringAdjust();//if there is a target, get the distance from it
+          //print("Adjust is "+adjust);
+          RobotContainer.m_turret_subsystem.setTurretSpeed(-adjust, 0.25);//set the speed to that distance, left is negative and right is positive
+      }
+    }
+    
+     if(RobotContainer.m_oi.r1()){
+      RobotContainer.m_turret_subsystem.encoderReset();
+     }
+      
+    if (RobotContainer.m_oi.share()){
+      RobotContainer.m_turret_subsystem.feeder(-1.0);
+      RobotContainer.m_intake_subsystem.setFloorSpeed(-1.0);
+      RobotContainer.m_intake_subsystem.setIntakeSpeed(-1.0);
+    }
+
+      
+  }
+
+  public void controlSet2() { //Final Setup/Testing Setup 2
+    
+  }
+
 }
