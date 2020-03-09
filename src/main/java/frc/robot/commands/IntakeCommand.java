@@ -6,99 +6,49 @@
 /*----------------------------------------------------------------------------*/
 
 package frc.robot.commands;
-//this command enaables the feeder and then the shooter in order to shoot them lemons, aim first
+
 import edu.wpi.first.wpilibj2.command.CommandBase;
-import frc.robot.subsystems.IntakeSubsystem;
-import frc.robot.subsystems.Limelight;
-import frc.robot.subsystems.DriveSubsystem;
-import frc.robot.subsystems.OI;
+import frc.robot.RobotContainer;
 import edu.wpi.first.wpilibj.Timer;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-
-
 
 public class IntakeCommand extends CommandBase {
   Timer timer;
-  boolean buttonPressed;
-  Limelight intake_limelight;
-  double mod;
-  IntakeSubsystem intake_subsystem;
-  DriveSubsystem drive_subsystem;
-  OI oi;
+  double runTime;
+  double currentTime;
 
-
-  
-  public IntakeCommand(Limelight subsystem1, OI subsystem2, DriveSubsystem subsystem3, double modifier) {
-    // if the button is pressed the command runs, modifier is used to regulate the speed of the shooter for now
-    intake_limelight = subsystem1;
-    oi = subsystem2;
-    drive_subsystem = subsystem3;
-    addRequirements(subsystem1);
-    addRequirements(subsystem2);
-    addRequirements(subsystem3);
-
+  public IntakeCommand(double time) {
     timer = new Timer();
-    intake_limelight = new Limelight("limelight-intake");
-    intake_subsystem = new IntakeSubsystem();
-    drive_subsystem = new DriveSubsystem();
-    oi = new OI();
-    mod = modifier;
+    runTime = time;
+    
+    // Use requires() here to declare subsystem dependencies
+    // eg. requires(chassis);
   }
 
   // Called just before this Command runs the first time
   @Override
   public void initialize() {
-    //intake_limelight.setLEDMode(3);
-    intake_limelight.setPipeline(0);
+    timer.start();
+    RobotContainer.m_intake_subsystem.setIntakeSpeed(-1.0);
   }
 
   // Called repeatedly when this Command is scheduled to run
   @Override
   public void execute() {
-    
-    if (intake_limelight.canSeeTarget()==true) {
-      double leftAdjust = -1.0; 
-      double rightAdjust = -1.0; // default speed values for chase
-
-    leftAdjust -= intake_limelight.steeringAdjust();//adjust each side according to tx
-    rightAdjust += intake_limelight.steeringAdjust();
-/*
-     if(Math.abs(intake_limelight.offsetY()) <= mindistance){//checks if the height is less than five, if it is stop 
-       drive_subsystem.tankDrive(0, 0, 1);
-     }else{
-       */
-       if(intake_limelight.canSeeTarget() == false){//check if there is target, if not, spin
-         drive_subsystem.tankDrive(-.5, .5, .5);
-       }else if((intake_limelight.canSeeTarget() == true)){//check if there is target, use adjust values to move
-         drive_subsystem.tankDrive(leftAdjust, rightAdjust, 0.5);
-         intake_subsystem.setIntakeSpeed(-.5);
-         
-     }
-    }
+    currentTime = timer.get();
+    RobotContainer.m_intake_subsystem.setIntakeSpeed(-1.0);
   }
+
+  
 
   // Called once after isFinished returns true
   @Override
   public void end(boolean interrupted) {
-    //Stops all motors and resets timer
-    intake_limelight.setPipeline(1);
-    intake_limelight.setLEDMode(0);
-    intake_subsystem.setIntakeSpeed(0.0);
-    timer.reset();
-    System.out.println("Ended");
+    RobotContainer.m_intake_subsystem.setIntakeSpeed(0.0);
   }
-
   // Make this return true when this Command no longer needs to run execute()
   @Override
   public boolean isFinished() {
-    if(buttonPressed==false) {
-    //if(buttonPressed==false){//if there is no more input, stop shooting
-      System.out.println("Disabled");
-      return true;
-    }else{
-      SmartDashboard.putBoolean("Following", buttonPressed);//Displays shooting status
-    return (!buttonPressed);//returns false if button is pressed
-    }
+    return (currentTime >= runTime);
   }
-
+ 
 }

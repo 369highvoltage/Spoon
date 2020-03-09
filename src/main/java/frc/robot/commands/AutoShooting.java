@@ -24,12 +24,15 @@ import frc.robot.subsystems.*;
 
 
 
-public class ShootingCommand extends CommandBase {
+public class AutoShooting extends CommandBase {
   Timer timer;
   boolean buttonPressed;
   double mod;
   double maximum = 17300;
   double acc;
+  double currentTime;
+  double runTime;
+  Limelight turret_Limelight;
 
   // TurretSubsystem turret_subsystem;
   // IntakeSubsystem intake_subsystem;
@@ -37,7 +40,7 @@ public class ShootingCommand extends CommandBase {
 
 
   
-  public ShootingCommand(double modifier, double accuracy) {
+  public AutoShooting(double modifier, double accuracy, double time) {
     // System.out.println("constr ");
     // if the button is pressed the command runs, modifier is used to regulate the speed of the shooter for now
     // turret_subsystem = subsystem;
@@ -45,38 +48,42 @@ public class ShootingCommand extends CommandBase {
     // addRequirements(subsystem);
     // addRequirements(subsystem2);
     timer = new Timer();
+    turret_Limelight = new Limelight("limelight-turret");
     // turret_subsystem = new TurretSubsystem();
     // intake_subsystem = new IntakeSubsystem();
     // oi = new OI();
     mod = modifier;
     acc = accuracy;
+    runTime = time;
   }
 
   // Called just before this Command runs the first time
   @Override
   public void initialize() {
-    // System.out.println("init ");
     RobotContainer.m_turret_subsystem.shooter(1.0, mod);
+    double adjust = turret_Limelight.steeringAdjust();//if there is a target, get the distance from it
+    RobotContainer.m_turret_subsystem.setTurretSpeed(-adjust, 0.25);
   }
 
   // Called repeatedly when this Command is scheduled to run
   @Override
   public void execute() {
-    // System.out.println(" exec");
-    
+    double adjust = turret_Limelight.steeringAdjust();//if there is a target, get the distance from it
+    RobotContainer.m_turret_subsystem.setTurretSpeed(-adjust, 0.25);
+        
     if (RobotContainer.m_turret_subsystem.shooterEncoder() >= acc) {//Once at that speed, fire/load balls
-      //17300 for
-      //System.out.println("Execute shooter stuff");
-      RobotContainer.m_turret_subsystem.shooter(1.0,mod);
-      RobotContainer.m_turret_subsystem.feeder(1.0);
-      RobotContainer.m_intake_subsystem.setFloorSpeed(-1.0);
-      // System.out.println("Shooting "+timer.get());
-    } else{
-      RobotContainer.m_turret_subsystem.shooter(1.0,mod);//Charges falcon motors until they reach certain speed
-      SmartDashboard.putNumber("Shooter Speed", RobotContainer.m_turret_subsystem.shooterEncoder());
-      timer.start();//Starts the timer
+        //17300 for
+        //System.out.println("Execute shooter stuff");
+        RobotContainer.m_turret_subsystem.shooter(1.0,mod);
+        RobotContainer.m_turret_subsystem.feeder(1.0);
+        RobotContainer.m_intake_subsystem.setFloorSpeed(-1.0);}
+      else{
+        RobotContainer.m_turret_subsystem.shooter(1.0,mod);//Charges falcon motors until they reach certain speed
+        timer.start();//Starts the timer
       }
-      buttonPressed = RobotContainer.m_oi.l1();
+
+      currentTime = timer.get();
+      
   }
 
 
@@ -89,22 +96,13 @@ public class ShootingCommand extends CommandBase {
     RobotContainer.m_turret_subsystem.feeder(0.0);
     RobotContainer.m_intake_subsystem.setFloorSpeed(0.0);
     timer.reset();
-    // System.out.println("Ended");
-    SmartDashboard.putBoolean("Shooting", false);
   }
 
   // Make this return true when this Command no longer needs to run execute()
   @Override
   public boolean isFinished() {
-    // System.out.println(" is finished");
-    if(buttonPressed==false) {
-    //if(buttonPressed==false){//if there is no more input, stop shooting
-      // System.out.println("Disabled");
-      return true;
-    }else{
-      SmartDashboard.putBoolean("Shooting", buttonPressed);//Displays shooting status
-    return (!buttonPressed);//returns false if button is pressed
+    // System.out.println(" is finished");    
+    return (currentTime >= runTime);
     }
   }
 
-}

@@ -4,11 +4,14 @@ import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.wpilibj.shuffleboard.*;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+
+import java.util.function.DoubleSupplier;
+
 import edu.wpi.cscore.HttpCamera;
 import edu.wpi.cscore.MjpegServer;
 
 public class Limelight extends SubsystemBase {
-    private MjpegServer jpeg;
     private NetworkTable table;
     private HttpCamera LLFeed;
     private String LLName;
@@ -24,8 +27,13 @@ public class Limelight extends SubsystemBase {
     }
 
     public double offsetX() {
+        //System.out.println(table.getEntry("tx").getDouble(0));
         return table.getEntry("tx").getDouble(0.00);
+        
+    }
 
+    public double rotationY() {
+        return table.getEntry("ts").getDouble(0.00);
     }
     public double offsetY() {
         return table.getEntry("ty").getDouble(0.00);
@@ -49,12 +57,34 @@ public class Limelight extends SubsystemBase {
     }
     //a value between 0 and 1, 0 being on, 1 being off 
     public void setCamMode(int mode) {
+        
         table.getEntry("camMode").setNumber(mode);
         /*
         0	Vision processor
         1	Driver Camera (Increases exposure, disables vision processing)
         */
     }
+
+    public void setLightPipeline() {
+
+    }
+
+    // public double steeringAdjust() {
+    //     float kp = -.05f;//Adjusts the value returned from Limelight
+    //     float minCommand = .005f;//Minimum value a value can have
+    //     float steeringAdjust = 0.05f;//Default value of adjust
+    //     float tx = (float)offsetX();
+    //     //SmartDashboard.setDefaultNumber("TX", tx);
+    //     float headingError = -tx;
+      
+    //     if(tx > 1) {
+    //         steeringAdjust = kp*headingError -minCommand;
+    //     }else if (tx < 1){
+    //         steeringAdjust = kp*headingError + minCommand;
+    //     }
+    //     return steeringAdjust;
+    //   }
+
     public double steeringAdjust() {
         float kp = -.1f;//Adjusts the value returned from Limelight
         float minCommand = .01f;//Minimum value a value can have
@@ -99,6 +129,16 @@ public class Limelight extends SubsystemBase {
         }
         mainTab.add("LimeLight", LLFeed).withPosition(0, 0).withSize(15, 8);
 
+    }
+
+    public double getDistance() {
+        double h1 = 53.34; //in CM
+        double h2 = offsetY(); //position offset (on Y axis) of target
+        double a1 = 25; //Angle of Limelight mounted
+        double a2 = rotationY(); //rotation offset of target (on Y axis)
+        System.out.println("Angle To Target: "+rotationY());
+        System.out.println("Denom: "+Math.tan(a1+a2));
+        return  (h2-h1) / Math.tan(a1+a2);
     }
 
 }

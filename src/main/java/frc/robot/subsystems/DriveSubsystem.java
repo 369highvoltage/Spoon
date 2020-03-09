@@ -29,6 +29,9 @@ public class DriveSubsystem extends SubsystemBase { //create variables are here
   PigeonIMU pigeon;
   TalonSRX m_pigeon;
   double[] ypr;
+  int P, I, D = 1;
+  int integral, previous_error, setpoint = 0;
+  double error, derivative, rcw;
 
   public DriveSubsystem(){ //define variables here
     m_frontLeft = new CANSparkMax(4, MotorType.kBrushless);
@@ -47,11 +50,30 @@ public class DriveSubsystem extends SubsystemBase { //create variables are here
     m_drive.tankDrive(leftSpeed*modifier, rightSpeed*modifier);
   }
 
+  public void arcadeDrive(double speed, double rotation){
+    m_drive.arcadeDrive(speed, rotation);
+  }
+
   public double getYaw(){
     pigeon.getYawPitchRoll(ypr);
-    System.out.println("Yaw= " + ypr[0]);
+    // System.out.println("Yaw= " + ypr[0]);
     return ypr[0];
-  }  
+  }
+
+  public void pigeonReset(){
+    pigeon.setYaw(0.0);
+  }
+
+  // public void setSetpoint(int setpoint){
+  //   this.setpoint = setpoint;
+  // }
 
   
+
+  // public void autoTankDrive(){
+  //   PID();
+  //   m_drive.tankDrive(rcw, -rcw); //have to fix, rcw seems to serve as a modifier, rcw is an output
+  // }
+  
+
 }

@@ -10,12 +10,14 @@ package frc.robot;
 import edu.wpi.first.networktables.NetworkTableInstance;
 //Commands & Subsystems
 import edu.wpi.first.wpilibj.TimedRobot;
+import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.button.Button;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import frc.robot.subsystems.*;
 import frc.robot.commands.*;
+import edu.wpi.first.networktables.NetworkTable;
 //Individual imports
 import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.networktables.NetworkTableInstance;
@@ -29,7 +31,10 @@ public class Robot extends TimedRobot {
   TurnLeft turn_left;
   TurnRight turn_right;
   ShootingCommand shooting_command;
-  AutoTest autonomus;
+  AutoAimCommand autoaim_command;
+  // AutoTest autonomus;
+  AutonomousV1 autonomousV1;
+  IntakeCommand intake_command;
   //Autonomus1 autonomus1;
   //subsystem
   DriveSubsystem drive_subsystem;
@@ -53,6 +58,9 @@ public class Robot extends TimedRobot {
   DriveBackward drive_backward;
   Limelight turret_Limelight;
   Limelight intake_Limelight;
+  JoystickButton circle;
+
+  NetworkTable turnin_pid_table;
   
  
 
@@ -61,26 +69,22 @@ public class Robot extends TimedRobot {
     m_robotContainer = new RobotContainer();
     // drive_subsystem = new DriveSubsystem();
     //camera_subsystem = new CameraSubsystem();
-    encoder_subsystem = new EncoderSubsystem();
-    turret_subsystem = new TurretSubsystem();
-    intake_subsystem = new IntakeSubsystem();
-    turret_Limelight = new Limelight("limelight-turret");
-    intake_Limelight = new Limelight("limelight-intake");
-
-    turn_left = new TurnLeft();
-    turn_right = new TurnRight();
-    oi = new OI();
-    btn = new JoystickButton(oi.getController(), 5);
-    // autonomus1 = new Autonomus1();
     // encoder_subsystem = new EncoderSubsystem();
     // turret_subsystem = new TurretSubsystem();
     // intake_subsystem = new IntakeSubsystem();
-    turn_left = new TurnLeft();
-    turn_right = new TurnRight();
+    turret_Limelight = new Limelight("Turret");
+    // turn_left = new TurnLeft();
+    // turn_right = new TurnRight();
     // oi = new OI();
     btn = new JoystickButton(RobotContainer.m_oi.getController(), 5);
-    autonomus = new AutoTest();
+    circle = new JoystickButton(RobotContainer.m_oi.getController(), 3);
+    // autonomus = new AutoTest();
     
+    autonomousV1 = new AutonomousV1();
+    turnin_pid_table = NetworkTableInstance.getDefault().getTable("turnin_pid");
+    turnin_pid_table.getEntry("kP").setDouble(0.1);
+    turnin_pid_table.getEntry("kI").setDouble(0);
+    turnin_pid_table.getEntry("kD").setDouble(0);
    
 
 
@@ -121,14 +125,28 @@ public class Robot extends TimedRobot {
    */
   @Override
   public void autonomousInit() {
+    // System.out.println("auto init");
     m_autonomousCommand = m_robotContainer.getAutonomousCommand();
     // schedule the autonomous command (example)
     if (m_autonomousCommand != null) {
       m_autonomousCommand.schedule();
     }
 
-    autonomus.autonomous1().schedule();
-    
+    // autonomus.autonomous1().schedule();
+    // autonomus.autonomous2().schedule();
+    // autonomousV1.AutonomousV1().schedule();
+    new AutoTest().autonomous1().schedule();
+    // testing pid values
+    // System.out.println(turnin_pid_table.getEntry("kP").getDouble(1));
+    // System.out.println(turnin_pid_table.getEntry("kI").getDouble(0));
+    // System.out.println(turnin_pid_table.getEntry("kD").getDouble(0));
+    // TurnLeft tl = new TurnLeft(90.0);
+    // tl.setTest(
+    //   turnin_pid_table.getEntry("kP").getDouble(1),
+    //   turnin_pid_table.getEntry("kI").getDouble(0),
+    //   turnin_pid_table.getEntry("kD").getDouble(0)
+    // );
+    // tl.schedule();
   }
 
   /**
@@ -136,11 +154,14 @@ public class Robot extends TimedRobot {
    */
   @Override
   public void autonomousPeriodic() {
+    // System.out.println("auto periodic");
     double leftAdjust = -1.0; 
     double rightAdjust = -1.0; // default speed values for chase
     double mindistance = 5;
     leftAdjust -= turret_Limelight.steeringAdjust();//adjust each side according to tx
     rightAdjust += turret_Limelight.steeringAdjust();
+    System.out.println(turret_Limelight.getDistance());
+    controlSet1();
 /*
      if(Math.abs(camera_subsystem.getTy()) <= mindistance){//checks if the height is less than five, if it is stop 
        drive_subsystem.tankDrive(0, 0, 1);
@@ -165,7 +186,10 @@ public class Robot extends TimedRobot {
     //camera_subsystem.ledOff();
     boolean m_LimelightHasValidTarget;
 
-    btn.whenPressed(new ShootingCommand(0.8, 14000));
+    btn.whenPressed(new ShootingCommand(0.85, 14000));
+    circle.whileHeld(new AutoAimCommand(turret_Limelight, RobotContainer.m_oi.circle()));
+    
+    // System.out.println("teleop init");
   }
 
   /**
@@ -173,53 +197,56 @@ public class Robot extends TimedRobot {
    */
   @Override
   public void teleopPeriodic() {
+
+    System.out.println("teleop periodic");
+    System.out.println(turret_Limelight.getDistance());
+
+    // System.out.println("circle is "+ RobotContainer.m_oi.circle());
+
     RobotContainer.m_drive_subsystem.tankDrive(RobotContainer.m_oi.driveGetLeftStick(), RobotContainer.m_oi.driveGetRightStick(), 0.95);
     RobotContainer.m_drive_subsystem.getYaw();
     turretVal = RobotContainer.m_oi.getLeftTurretAxis();//Get fixed inputs from oi
     turretVal2 = RobotContainer.m_oi.getRightTurretAxis();
 
     turretVal2 = turretVal-turretVal2;//final calculations
+    RobotContainer.m_intake_subsystem.setFloorSpeed(RobotContainer.m_oi.square());
+    RobotContainer.m_intake_subsystem.setIntakeSpeed(-RobotContainer.m_oi.x());
     RobotContainer.m_turret_subsystem.setTurretSpeed(turretVal2, 0.25);
+    RobotContainer.m_turret_subsystem.encoderVal(); //turret encoder  
+
+
+    controlSet1();
 
     //Autoaim (toggle)
-    if (oi.circle()==true){
-      while(oi.circleup()!=true){
-          double adjust = turret_Limelight.steeringAdjust();//if there is a target, get the distance from it
-          //print("Adjust is "+adjust);
-          turret_subsystem.setTurretSpeed(-adjust, 0.25);//set the speed to that distance, left is negative and right is positive
-      }
-    }
+    // if (RobotContainer.m_oi.circle()==true){
+    //   while(RobotContainer.m_oi.circleup()!=true){
+    //       double adjust = turret_Limelight.steeringAdjust();//if there is a target, get the distance from it
+    //       //print("Adjust is "+adjust);
+    //       RobotContainer.m_turret_subsystem.setTurretSpeed(-adjust, 0.25);//set the speed to that distance, left is negative and right is positive
+    //   }
+    // }
 
-    /*
-    if (turret_Limelight.canSeeTarget()==false){
-    if (RobotContainer.m_oi.circle()==true){
-      while(RobotContainer.m_oi.circleup()!=true){
-        if (turret_Limelight.canSeeTarget()==false){
-          //if there is no target, do nothing
-        }else if((turret_Limelight.canSeeTarget()==true)){
-          print("yes.");
-          double adjust = turret_Limelight.steeringAdjust();//if there is a target, get the distance from it
-          RobotContainer.m_turret_subsystem.setTurretSpeed(adjust, 0.25);//set the speed to that distance, left is negative and right is positive
-        }
-    */
-    //turret_subsystem.feeder(oi.r1());
-    turret_subsystem.encoderReset(oi.triangle());
-    //intake_subsystem.setFloorSpeed(-oi.square());
-    //intake_subsystem.setIntakeSpeed(-oi.x());
-    //encoder_subsystem.getPosition();
-    //encoder_subsystem.getVelocity();
 
-    // turret_subsystem.shooterEncoder();
-    
-    RobotContainer.m_intake_subsystem.setFloorSpeed(-RobotContainer.m_oi.square());
-    RobotContainer.m_intake_subsystem.setIntakeSpeed(-RobotContainer.m_oi.x());
-    RobotContainer.m_turret_subsystem.encoderVal(); //turret encoder
+   
 
     if(RobotContainer.m_oi.r1()){
-      drive_backward = new DriveBackward(2);
-      drive_backward.schedule();
+      RobotContainer.m_turret_subsystem.encoderReset();
     }
     
+    if (RobotContainer.m_oi.share()){
+      RobotContainer.m_turret_subsystem.feeder(-1.0);
+      RobotContainer.m_intake_subsystem.setFloorSpeed(-1.0);
+      RobotContainer.m_intake_subsystem.setIntakeSpeed(-1.0);
+    }
+
+    // if (RobotContainer.m_oi.circle()){
+    //   autoaim_command = new AutoAimCommand(turret_Limelight, RobotContainer.m_oi.circle());
+    //   autoaim_command.schedule();
+    // }
+   
+    
+    
+
   }
   
 
@@ -243,4 +270,32 @@ public class Robot extends TimedRobot {
     System.out.println(value);
   }
   
+  public void controlSet1() { //Testing Setup
+
+    //Autoaim (toggle)
+    if (RobotContainer.m_oi.circle()==true){
+      while(RobotContainer.m_oi.isCircleUp()!=true){
+          double adjust = turret_Limelight.steeringAdjust();//if there is a target, get the distance from it
+          //print("Adjust is "+adjust);
+          RobotContainer.m_turret_subsystem.setTurretSpeed(-adjust, 0.25);//set the speed to that distance, left is negative and right is positive
+      }
+    }
+    
+     if(RobotContainer.m_oi.r1()){
+      RobotContainer.m_turret_subsystem.encoderReset();
+     }
+      
+    if (RobotContainer.m_oi.share()){
+      RobotContainer.m_turret_subsystem.feeder(-1.0);
+      RobotContainer.m_intake_subsystem.setFloorSpeed(-1.0);
+      RobotContainer.m_intake_subsystem.setIntakeSpeed(-1.0);
+    }
+
+      
+  }
+
+  public void controlSet2() { //Final Setup/Testing Setup 2
+    
+  }
+
 }

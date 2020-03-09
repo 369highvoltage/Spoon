@@ -18,15 +18,16 @@ public class DriveForward extends CommandBase {
   double initialPosition;
   double currentPosition;
   double distance;
-  double mod = 0.5;
+  double mod;
 
 
-  public DriveForward(double distanceToTravel) {
+  public DriveForward(double distanceToTravel, double speed) {
   //   drive_subsystem = subsystem;
   //   encoder_subsysem = subsystem2;
     // addRequirements(drive_subsystem);
     // addRequirements(encoder_subsysem);
     distance = -distanceToTravel;
+    mod = speed;
     // System.out.println("dist " + distance);
   }
 

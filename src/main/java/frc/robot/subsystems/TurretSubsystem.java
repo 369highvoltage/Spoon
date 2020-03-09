@@ -82,8 +82,8 @@ public class TurretSubsystem extends SubsystemBase {
     }
   }
   
-  public void encoderReset(boolean button){
-    if(button)
+  public void encoderReset(){
+    // if(button)
     m_turret.setSelectedSensorPosition(0);
   }
 
@@ -104,6 +104,6 @@ public class TurretSubsystem extends SubsystemBase {
   }
 
    public void feeder(double speed){
-      m_feeder.set(ControlMode.PercentOutput,speed);
+      m_feeder.set(ControlMode.PercentOutput,-speed);
     }
 }
