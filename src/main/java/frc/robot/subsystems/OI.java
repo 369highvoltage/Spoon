@@ -64,7 +64,7 @@ public class OI extends SubsystemBase {
   }
 
   public boolean circle(){ //autoaim
-    return joy.getRawButtonPressed(3);
+    return joy.getRawButton(3);
   }
   public boolean circleup(){
     return joy.getRawButtonReleased(3);
@@ -91,7 +91,7 @@ public class OI extends SubsystemBase {
   }
 
   public boolean share(){ 
-    return joy.getRawButtonPressed(9);
+    return joy.getRawButton(9);
   }
 
   public boolean options(){

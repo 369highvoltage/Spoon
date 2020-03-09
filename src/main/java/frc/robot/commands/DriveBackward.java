@@ -21,11 +21,12 @@ public class DriveBackward extends CommandBase {
   double mod = 0.5;
 
 
-  public DriveBackward(double distanceToTravel) {
+  public DriveBackward(double distanceToTravel, double speed) {
     // addRequirements(drive_subsystem);
     // addRequirements(encoder_subsysem);
     //idk if we need this, needs testing
     distance = distanceToTravel;
+    mod = speed;
   }
 
   // Called just before this Command runs the first time

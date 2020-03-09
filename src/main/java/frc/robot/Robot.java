@@ -144,7 +144,7 @@ public class Robot extends TimedRobot {
    */
   @Override
   public void autonomousPeriodic() {
-    System.out.println("auto periodic");
+    // System.out.println("auto periodic");
     double leftAdjust = -1.0; 
     double rightAdjust = -1.0; // default speed values for chase
     double mindistance = 5;
@@ -193,16 +193,14 @@ public class Robot extends TimedRobot {
     turretVal2 = RobotContainer.m_oi.getRightTurretAxis();
 
     turretVal2 = turretVal-turretVal2;//final calculations
-    RobotContainer.m_turret_subsystem.setTurretSpeed(turretVal2, 0.25);   
-    RobotContainer.m_intake_subsystem.setFloorSpeed(-RobotContainer.m_oi.square());
-    RobotContainer.m_intake_subsystem.setIntakeSpeed(-RobotContainer.m_oi.x());
-    RobotContainer.m_turret_subsystem.encoderVal(); //turret encoder
+    RobotContainer.m_turret_subsystem.setTurretSpeed(turretVal2, 0.25);
 
-    if(RobotContainer.m_oi.r1()){
-      RobotContainer.m_turret_subsystem.encoderReset();
-    }
-    System.out.println(RobotContainer.m_turret_subsystem.encoderVal());
-    
+    controlSet1();
+
+   
+    RobotContainer.m_intake_subsystem.setFloorSpeed(RobotContainer.m_oi.square());
+    RobotContainer.m_intake_subsystem.setIntakeSpeed(-RobotContainer.m_oi.x());
+    RobotContainer.m_turret_subsystem.encoderVal(); //turret encoder  
   }
 
   @Override
@@ -223,13 +221,27 @@ public class Robot extends TimedRobot {
     System.out.println(value);
   }
   
-  public void controlSet1(){
+  public void controlSet1() {
+
+    //Autoaim (toggle)
     if (RobotContainer.m_oi.circle()==true){
-      while(RobotContainer.m_oi.circleup()!=true){
+      while(RobotContainer.m_oi.isCircleUp()!=true){
           double adjust = turret_Limelight.steeringAdjust();//if there is a target, get the distance from it
+          //print("Adjust is "+adjust);
           RobotContainer.m_turret_subsystem.setTurretSpeed(-adjust, 0.25);//set the speed to that distance, left is negative and right is positive
-        }
       }
+    }
+    
+     if(RobotContainer.m_oi.r1()){
+      RobotContainer.m_turret_subsystem.encoderReset();
+     }
+      
+    if (RobotContainer.m_oi.share()){
+      RobotContainer.m_turret_subsystem.feeder(-1.0);
+      RobotContainer.m_intake_subsystem.setFloorSpeed(-1.0);
+      RobotContainer.m_intake_subsystem.setIntakeSpeed(-1.0);
+    }
+
       
   }
 
