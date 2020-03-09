@@ -193,14 +193,15 @@ public class Robot extends TimedRobot {
     turretVal2 = RobotContainer.m_oi.getRightTurretAxis();
 
     turretVal2 = turretVal-turretVal2;//final calculations
+    RobotContainer.m_intake_subsystem.setFloorSpeed(RobotContainer.m_oi.square());
+    RobotContainer.m_intake_subsystem.setIntakeSpeed(-RobotContainer.m_oi.x());
     RobotContainer.m_turret_subsystem.setTurretSpeed(turretVal2, 0.25);
+    RobotContainer.m_turret_subsystem.encoderVal(); //turret encoder  
 
     controlSet1();
 
    
-    RobotContainer.m_intake_subsystem.setFloorSpeed(RobotContainer.m_oi.square());
-    RobotContainer.m_intake_subsystem.setIntakeSpeed(-RobotContainer.m_oi.x());
-    RobotContainer.m_turret_subsystem.encoderVal(); //turret encoder  
+
   }
 
   @Override
@@ -221,7 +222,7 @@ public class Robot extends TimedRobot {
     System.out.println(value);
   }
   
-  public void controlSet1() {
+  public void controlSet1() { //Testing Setup
 
     //Autoaim (toggle)
     if (RobotContainer.m_oi.circle()==true){
@@ -243,6 +244,10 @@ public class Robot extends TimedRobot {
     }
 
       
+  }
+
+  public void controlSet2() { //Final Setup/Testing Setup 2
+    
   }
 
 }
