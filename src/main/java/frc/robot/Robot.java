@@ -190,9 +190,11 @@ public class Robot extends TimedRobot {
     boolean m_LimelightHasValidTarget;
 
     btn.whenPressed(new ShootingCommand(0.89, 14500));
-    circle.whenPressed(new AutoAimCommand(turret_Limelight, turret_subsystem, 0.6));
-    // circle.whileHeld(new AutoAimCommand(turret_Limelight, RobotContainer.m_oi.circle()));
-    
+    System.out.println("teleop int");
+    circle.whenPressed(new AutoAimCommand(0.6));
+    System.out.println("command passed");
+    //circle.whenPressed(new AutoAimCommand(turret_Limelight, turret_subsystem, 0.6));
+    //circle.whileHeld(new AutoAimCommand(turret_Limelight, RobotContainer.m_oi.circle()));
     // System.out.println("teleop init");
   }
 
@@ -204,10 +206,9 @@ public class Robot extends TimedRobot {
 
     // System.out.println("teleop periodic");
     // System.out.println(turret_Limelight.getDistance());
-
     // System.out.println("circle is "+ RobotContainer.m_oi.circle());
-    movementValLeft = RobotContainer.m_oi.driveGetLeftStick() + RobotContainer.m_oi.driveL2()/2 + (-RobotContainer.m_oi.driveR2()/2); // merges all inputs from driver
-    movementValRight = RobotContainer.m_oi.driveGetRightStick() + RobotContainer.m_oi.driveL2()/2 + (-RobotContainer.m_oi.driveR2()/2);
+    movementValLeft = RobotContainer.m_oi.driveGetLeftStick() + RobotContainer.m_oi.driveL1()/0.70 + (-RobotContainer.m_oi.driveR1()/0.70); // merges all inputs from driver
+    movementValRight = RobotContainer.m_oi.driveGetRightStick() + RobotContainer.m_oi.driveL1()/0.70 + (-RobotContainer.m_oi.driveR1()/0.70);
     //RobotContainer.m_drive_subsystem.tankDrive(RobotContainer.m_oi.driveGetLeftStick(), RobotContainer.m_oi.driveGetRightStick(), 0.95);
     RobotContainer.m_drive_subsystem.tankDrive(movementValLeft, movementValRight, 0.85);
     RobotContainer.m_drive_subsystem.getYaw();

@@ -14,19 +14,23 @@ import frc.robot.subsystems.*;
 import frc.robot.RobotContainer;
 
 public class AutoAimCommand extends CommandBase {
-  Limelight limelight_subsystem;
+  Limelight turret_Limelight;
   TurretSubsystem turret_subsystem;
   double adjust;
   double mfd;
   boolean buttonPressed;
   //boolean button;
 
-  public AutoAimCommand(Limelight subsystem, TurretSubsystem subsystem2, double modifier) {
+  public AutoAimCommand(double modifier) {
+    // public AutoAimCommand(Limelight subsystem, TurretSubsystem subsystem2, double modifier)
     System.out.println("autoaim constr");
-    addRequirements(subsystem);
-    addRequirements(subsystem2);
-    limelight_subsystem = subsystem;
-    turret_subsystem = subsystem2;
+    // addRequirements(subsystem);
+    // addRequirements(subsystem2);
+    // limelight_subsystem = subsystem;
+    // turret_subsystem = subsystem2;
+    turret_Limelight = new Limelight("limelight-turret");
+    turret_subsystem = RobotContainer.m_turret_subsystem;
+
     mfd = modifier;
     //this.button = button;
     // Use requires() here to declare subsystem dependencies
@@ -37,16 +41,16 @@ public class AutoAimCommand extends CommandBase {
   @Override
   public void initialize() {
     System.out.println("autoaim init");
-    double adjust = limelight_subsystem.steeringAdjust();//if there is a target, get the distance from it
-    turret_subsystem.setTurretSpeed(-adjust, 0.25);
+    double adjust = turret_Limelight.steeringAdjust();//if there is a target, get the distance from it
+    RobotContainer.m_turret_subsystem.setTurretSpeed(-adjust, 0.25);
   }
 
   // Called repeatedly when this Command is scheduled to run
   @Override
   public void execute() {
     System.out.println("autoaim exec ");
-    adjust = limelight_subsystem.steeringAdjust();
-    System.out.println("stadj returned"+adjust);
+    adjust = turret_Limelight.steeringAdjust();
+    System.out.println("stadj returned" + adjust);
     RobotContainer.m_turret_subsystem.setTurretSpeed(-adjust, 0.25);
   }
 
@@ -63,7 +67,7 @@ public class AutoAimCommand extends CommandBase {
   @Override
   public boolean isFinished() {
     System.out.println("autoaim is finished");
-    buttonPressed = RobotContainer.m_oi.circle();
+    buttonPressed = (RobotContainer.m_oi.circle()==false);
     return (buttonPressed);
   }
 

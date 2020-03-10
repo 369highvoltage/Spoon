@@ -125,10 +125,10 @@ public class OI extends SubsystemBase {
   }
   
   public double driveL2(){
-    return joyDrive.getRawAxis(7);
+    return joyDrive.getRawAxis(3);
   }
   public double driveR2(){
-    return joyDrive.getRawAxis(8);
+    return joyDrive.getRawAxis(4);
   }
   
   public double driveL1(){
