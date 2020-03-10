@@ -15,14 +15,20 @@ import frc.robot.RobotContainer;
 
 public class AutoAimCommand extends CommandBase {
   Limelight limelight_subsystem;
+  TurretSubsystem turret_subsystem;
   double adjust;
-  boolean button;
+  double mfd;
+  boolean buttonPressed;
+  //boolean button;
 
-  public AutoAimCommand(Limelight subsystem, boolean button) {
+  public AutoAimCommand(Limelight subsystem, TurretSubsystem subsystem2, double modifier) {
     System.out.println("autoaim constr");
     addRequirements(subsystem);
+    addRequirements(subsystem2);
     limelight_subsystem = subsystem;
-    this.button = button;
+    turret_subsystem = subsystem2;
+    mfd = modifier;
+    //this.button = button;
     // Use requires() here to declare subsystem dependencies
     // eg. requires(chassis);
   }
@@ -31,6 +37,8 @@ public class AutoAimCommand extends CommandBase {
   @Override
   public void initialize() {
     System.out.println("autoaim init");
+    double adjust = limelight_subsystem.steeringAdjust();//if there is a target, get the distance from it
+    turret_subsystem.setTurretSpeed(-adjust, 0.25);
   }
 
   // Called repeatedly when this Command is scheduled to run
@@ -55,7 +63,8 @@ public class AutoAimCommand extends CommandBase {
   @Override
   public boolean isFinished() {
     System.out.println("autoaim is finished");
-    return (button);
+    buttonPressed = RobotContainer.m_oi.circle();
+    return (buttonPressed);
   }
 
 }

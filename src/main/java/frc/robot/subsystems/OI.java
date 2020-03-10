@@ -123,14 +123,14 @@ public class OI extends SubsystemBase {
   public double driveGetRightStick(){ 
     return joyDrive.getRawAxis(5);
   }
-  /*
+  
   public double driveL2(){
-    return joyDrive.getRawAxis(axis);
+    return joyDrive.getRawAxis(7);
   }
   public double driveR2(){
-    return joyDrive.getRawAxis(axis);
+    return joyDrive.getRawAxis(8);
   }
-  */
+  
   public double driveL1(){
     if (joyDrive.getRawButton(5) == true){
       return 1;

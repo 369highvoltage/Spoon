@@ -56,11 +56,12 @@ public class Robot extends TimedRobot {
   private double m_LimelightDriveCommand = 0.0;
   private double m_LimelightSteerCommand = 0.0;
   JoystickButton btn;
+  JoystickButton circle;
   DriveForward drive_forward;
   DriveBackward drive_backward;
   Limelight turret_Limelight;
   Limelight intake_Limelight;
-  JoystickButton circle;
+  
 
   NetworkTable turnin_pid_table;
   
@@ -189,7 +190,8 @@ public class Robot extends TimedRobot {
     boolean m_LimelightHasValidTarget;
 
     btn.whenPressed(new ShootingCommand(0.89, 14500));
-    circle.whileHeld(new AutoAimCommand(turret_Limelight, RobotContainer.m_oi.circle()));
+    circle.whenPressed(new AutoAimCommand(turret_Limelight, turret_subsystem, 0.6));
+    // circle.whileHeld(new AutoAimCommand(turret_Limelight, RobotContainer.m_oi.circle()));
     
     // System.out.println("teleop init");
   }
@@ -204,16 +206,13 @@ public class Robot extends TimedRobot {
     // System.out.println(turret_Limelight.getDistance());
 
     // System.out.println("circle is "+ RobotContainer.m_oi.circle());
-    movementValLeft = RobotContainer.m_oi.driveGetLeftStick() + RobotContainer.m_oi.driveL1()/2 + (-RobotContainer.m_oi.driveR1()/2);
-    movementValRight = RobotContainer.m_oi.driveGetRightStick() + RobotContainer.m_oi.driveL1()/2 + (-RobotContainer.m_oi.driveR1()/2);
-    
+    movementValLeft = RobotContainer.m_oi.driveGetLeftStick() + RobotContainer.m_oi.driveL2()/2 + (-RobotContainer.m_oi.driveR2()/2); // merges all inputs from driver
+    movementValRight = RobotContainer.m_oi.driveGetRightStick() + RobotContainer.m_oi.driveL2()/2 + (-RobotContainer.m_oi.driveR2()/2);
     //RobotContainer.m_drive_subsystem.tankDrive(RobotContainer.m_oi.driveGetLeftStick(), RobotContainer.m_oi.driveGetRightStick(), 0.95);
     RobotContainer.m_drive_subsystem.tankDrive(movementValLeft, movementValRight, 0.85);
-  
     RobotContainer.m_drive_subsystem.getYaw();
     turretVal = RobotContainer.m_oi.getLeftTurretAxis();//Get fixed inputs from oi
     turretVal2 = RobotContainer.m_oi.getRightTurretAxis();
-
     turretVal2 = turretVal-turretVal2;//final calculations
     RobotContainer.m_intake_subsystem.setFloorSpeed(RobotContainer.m_oi.square());
     RobotContainer.m_intake_subsystem.setIntakeSpeed(-RobotContainer.m_oi.x());
@@ -278,6 +277,7 @@ public class Robot extends TimedRobot {
   
   public void controlSet1() { //Testing Setup
 
+    /*
     //Autoaim (toggle)
     if (RobotContainer.m_oi.circle()==true){
       while(RobotContainer.m_oi.isCircleUp()!=true){
@@ -286,7 +286,8 @@ public class Robot extends TimedRobot {
           RobotContainer.m_turret_subsystem.setTurretSpeed(-adjust, 0.25);//set the speed to that distance, left is negative and right is positive
       }
     }
-    
+    */
+
      if(RobotContainer.m_oi.r1()){
       RobotContainer.m_turret_subsystem.encoderReset();
      }
@@ -296,8 +297,7 @@ public class Robot extends TimedRobot {
       RobotContainer.m_intake_subsystem.setFloorSpeed(-1.0);
       RobotContainer.m_intake_subsystem.setIntakeSpeed(-1.0);
     }
-
-      
+   
   }
 
   public void controlSet2() { //Final Setup/Testing Setup 2

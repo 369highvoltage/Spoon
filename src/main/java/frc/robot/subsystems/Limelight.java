@@ -140,5 +140,4 @@ public class Limelight extends SubsystemBase {
         // System.out.println("Denom: "+Math.tan(a1+a2));
         return  (h2-h1) / Math.tan(a1+a2);
     }
-
 }
