@@ -19,6 +19,7 @@ public class Limelight extends SubsystemBase {
     public Limelight(String limelightName) {
         table = NetworkTableInstance.getDefault().getTable(limelightName);
         LLName = limelightName;
+        //System.out.println(NetworkTableInstance.getDefault().getTable("CameraPublisher").getEntry(limelightName).getString("source"));
     }
 
     public boolean canSeeTarget() {
@@ -34,22 +35,34 @@ public class Limelight extends SubsystemBase {
     public double rotationY() {
         return table.getEntry("ts").getDouble(0.00);
     }
-
     public double offsetY() {
         return table.getEntry("ty").getDouble(0.00);
+    }
+    public double areaPercent() {
+        return table.getEntry("ta").getDouble(0.00);
     }
     //a value determined on the number of pipelines we have (created within limelight-local:5801)
     public void setPipeline(int mode) {
         table.getEntry("pipeline").setNumber(mode);
     }
-    //a value between 0 and 1, 0 being on, 1 being off 
+    //a value setting the led mode of the limelight
     public void setLEDMode(int mode) {
         table.getEntry("ledMode").setNumber(mode);
+        /*
+        0	use the LED Mode set in the current pipeline
+        1	force off
+        2	force blink
+        3	force on
+        */
     }
     //a value between 0 and 1, 0 being on, 1 being off 
     public void setCamMode(int mode) {
         
         table.getEntry("camMode").setNumber(mode);
+        /*
+        0	Vision processor
+        1	Driver Camera (Increases exposure, disables vision processing)
+        */
     }
 
     public void setLightPipeline() {
@@ -73,13 +86,13 @@ public class Limelight extends SubsystemBase {
     //   }
 
     public double steeringAdjust() {
-        float kp = -.1f;//Adjusts the value returned from Limelight
+        float kp = -.22f;//Adjusts the value returned from Limelight
         float minCommand = .01f;//Minimum value a value can have
-        float steeringAdjust = 0.077f;//Default value of adjust
+        float steeringAdjust = 0.07f;//Default value of adjust
         float tx = (float)offsetX();
         //SmartDashboard.setDefaultNumber("TX", tx);
         float headingError = -tx;
-      
+        //System.out.println(tx);
         if(tx > 1) {
             steeringAdjust = kp*headingError -minCommand;
         }else if (tx < 1){
@@ -95,8 +108,8 @@ public class Limelight extends SubsystemBase {
 
       public double distanceAdjust(){
         float KpDist = -0.1f;
-        float Xoffset = (float)offsetY();
-        float distance_error = -Xoffset;
+        float Yoffset = (float)offsetY();
+        float distance_error = -Yoffset;
         float distance_adjust = distance_error*KpDist;
         if (distance_adjust > 1){
           distance_adjust = 1;
@@ -105,6 +118,7 @@ public class Limelight extends SubsystemBase {
         }
         return distance_adjust;
       }
+
       public void Vision() {
         ShuffleboardTab mainTab = Shuffleboard.getTab("SmartDashboard");
         if(LLName==("limelight-turret")){
@@ -122,9 +136,8 @@ public class Limelight extends SubsystemBase {
         double h2 = offsetY(); //position offset (on Y axis) of target
         double a1 = 25; //Angle of Limelight mounted
         double a2 = rotationY(); //rotation offset of target (on Y axis)
-        System.out.println("Angle To Target: "+rotationY());
-        System.out.println("Denom: "+Math.tan(a1+a2));
+        // System.out.println("Angle To Target: "+rotationY());
+        // System.out.println("Denom: "+Math.tan(a1+a2));
         return  (h2-h1) / Math.tan(a1+a2);
     }
-
 }

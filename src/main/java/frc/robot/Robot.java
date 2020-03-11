@@ -28,8 +28,6 @@ public class Robot extends TimedRobot {
   private Command m_autonomousCommand;
   private RobotContainer m_robotContainer;
   //commands
-  DriveForward drive_forward;
-  DriveBackward drive_backward;
   TurnLeft turn_left;
   TurnRight turn_right;
   ShootingCommand shooting_command;
@@ -39,8 +37,12 @@ public class Robot extends TimedRobot {
   IntakeCommand intake_command;
   //Autonomus1 autonomus1;
   //subsystem
+  DriveSubsystem drive_subsystem;
+  EncoderSubsystem encoder_subsystem;
+  OI oi;
+  TurretSubsystem turret_subsystem;
+  IntakeSubsystem intake_subsystem;
   // DriveSubsystem drive_subsystem;
-  Limelight turret_Limelight;
   // EncoderSubsystem encoder_subsystem;
   // OI oi;
   // TurretSubsystem turret_subsystem;
@@ -48,13 +50,18 @@ public class Robot extends TimedRobot {
   //variables
   double turretVal;
   double turretVal2;
+  double movementValLeft;
+  double movementValRight;
   private boolean m_LimelightHasValidTarget = false;
   private double m_LimelightDriveCommand = 0.0;
   private double m_LimelightSteerCommand = 0.0;
   JoystickButton btn;
   JoystickButton circle;
-  double movementValLeft;
-  double movementValRight;
+  DriveForward drive_forward;
+  DriveBackward drive_backward;
+  Limelight turret_Limelight;
+  Limelight intake_Limelight;
+  
 
   NetworkTable turnin_pid_table;
   
@@ -184,7 +191,9 @@ public class Robot extends TimedRobot {
 
     btn.whenPressed(new ShootingCommand(0.8, 14000));
     circle.whileHeld(new AutoAimCommand(turret_Limelight));
-    
+    circle.whenPressed(new AutoAimCommand(0.6));
+    //circle.whenPressed(new AutoAimCommand(turret_Limelight, turret_subsystem, 0.6));
+    //circle.whileHeld(new AutoAimCommand(turret_Limelight, RobotContainer.m_oi.circle()));
     // System.out.println("teleop init");
   }
 
@@ -194,16 +203,14 @@ public class Robot extends TimedRobot {
   @Override
   public void teleopPeriodic() {
 
-    System.out.println("teleop periodic");
-    System.out.println(turret_Limelight.getDistance());
-
+    // System.out.println("teleop periodic");
+    // System.out.println(turret_Limelight.getDistance());
     // System.out.println("circle is "+ RobotContainer.m_oi.circle());
 
     // RobotContainer.m_drive_subsystem.tankDrive(RobotContainer.m_oi.driveGetLeftStick(), RobotContainer.m_oi.driveGetRightStick(), 0.85);
     RobotContainer.m_drive_subsystem.getYaw();
     turretVal = RobotContainer.m_oi.getLeftTurretAxis();//Get fixed inputs from oi
     turretVal2 = RobotContainer.m_oi.getRightTurretAxis();
-
     turretVal2 = turretVal-turretVal2;//final calculations
     RobotContainer.m_intake_subsystem.setFloorSpeed(RobotContainer.m_oi.square());
     RobotContainer.m_intake_subsystem.setIntakeSpeed(-RobotContainer.m_oi.x());
@@ -250,6 +257,9 @@ public class Robot extends TimedRobot {
     
 
   }
+  
+
+   
 
   @Override
   public void testInit() {
