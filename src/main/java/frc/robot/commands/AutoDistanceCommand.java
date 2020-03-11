@@ -13,26 +13,16 @@ import edu.wpi.first.wpilibj2.command.Subsystem;
 import frc.robot.subsystems.*;
 import frc.robot.RobotContainer;
 
-public class AutoAimCommand extends CommandBase {
-  Limelight turret_Limelight;
-  TurretSubsystem turret_subsystem;
+public class AutoDistanceCommand extends CommandBase {
+  Limelight limelight_subsystem;
   double adjust;
-  double mfd;
-  boolean buttonPressed;
-  //boolean button;
+  boolean button;
 
-  public AutoAimCommand(double modifier) {
-    // public AutoAimCommand(Limelight subsystem, TurretSubsystem subsystem2, double modifier)
-    System.out.println("autoaim constr");
-    // addRequirements(subsystem);
-    // addRequirements(subsystem2);
-    // limelight_subsystem = subsystem;
-    // turret_subsystem = subsystem2;
-    turret_Limelight = new Limelight("limelight-turret");
-    turret_subsystem = RobotContainer.m_turret_subsystem;
-
-    mfd = modifier;
-    //this.button = button;
+  public AutoDistanceCommand(Limelight subsystem, boolean button) {
+    System.out.println("Auto Distance constr");
+    addRequirements(subsystem);
+    limelight_subsystem = subsystem;
+    this.button = button;
     // Use requires() here to declare subsystem dependencies
     // eg. requires(chassis);
   }
@@ -40,17 +30,14 @@ public class AutoAimCommand extends CommandBase {
   // Called just before this Command runs the first time
   @Override
   public void initialize() {
-    System.out.println("autoaim init");
-    double adjust = turret_Limelight.steeringAdjust();//if there is a target, get the distance from it
-    RobotContainer.m_turret_subsystem.setTurretSpeed(-adjust, 0.25);
+    System.out.println("Auto Distance init");
   }
 
   // Called repeatedly when this Command is scheduled to run
   @Override
   public void execute() {
-    System.out.println("autoaim exec ");
-    adjust = turret_Limelight.steeringAdjust();
-    System.out.println("stadj returned" + adjust);
+    System.out.println("Auto Distance exec ");
+    adjust = limelight_subsystem.steeringAdjust();
     RobotContainer.m_turret_subsystem.setTurretSpeed(-adjust, 0.25);
   }
 
@@ -58,7 +45,7 @@ public class AutoAimCommand extends CommandBase {
   // Called once after isFinished returns true
   @Override
   public void end(boolean interrupted) {
-    System.out.println("autoaim end");
+    System.out.println("Auto Distance end");
     RobotContainer.m_turret_subsystem.setTurretSpeed(0.0, 0.0);
   }
 
@@ -66,9 +53,8 @@ public class AutoAimCommand extends CommandBase {
   // Make this return true when this Command no longer needs to run execute()
   @Override
   public boolean isFinished() {
-    System.out.println("autoaim is finished");
-    buttonPressed = (RobotContainer.m_oi.circle()==false);
-    return (buttonPressed);
+    System.out.println("Auto Distance is finished");
+    return (button);
   }
 
 }
