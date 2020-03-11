@@ -69,7 +69,7 @@ public class ShootingCommand extends CommandBase {
       //System.out.println("Execute shooter stuff");
       RobotContainer.m_turret_subsystem.shooter(1.0,mod);
       RobotContainer.m_turret_subsystem.feeder(1.0);
-      RobotContainer.m_intake_subsystem.setFloorSpeed(-1.0);
+      RobotContainer.m_intake_subsystem.setFloorSpeed(-0.7);
       // System.out.println("Shooting "+timer.get());
     } else{
       RobotContainer.m_turret_subsystem.shooter(1.0,mod);//Charges falcon motors until they reach certain speed

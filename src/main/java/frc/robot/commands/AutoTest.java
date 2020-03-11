@@ -21,7 +21,7 @@ public class AutoTest { //groups of autonomus commands that do different tasks
         return new SequentialCommandGroup(
             new DriveForward(2, 0.75), //drops the intake
             new ParallelCommandGroup( //shoots 3 lemons
-                new AutoShooting(0.8, 14000, 2),
+                new AutoShooting(0.9, 14000, 2),
                 new IntakeCommand(2)),
             new TurnLeft(35, 1), //turns to the trench
             new DriveForward(5.5, 0.75),
@@ -31,7 +31,7 @@ public class AutoTest { //groups of autonomus commands that do different tasks
                 new DriveForward(6, 0.3)
                 ),
             new ParallelCommandGroup( //shoot 2 lemons from the trench
-                new AutoShooting(0.9, 14000, 2),
+                new AutoShooting(0.95 , 14000, 2),
                 new IntakeCommand(2)            
             )            
         );

@@ -123,4 +123,28 @@ public class OI extends SubsystemBase {
   public double driveGetRightStick(){ 
     return joyDrive.getRawAxis(5);
   }
+
+  public double driveL1(){
+    if (joyDrive.getRawButton(5) == true){
+      return 1;
+    }else{
+      return 0;
+    }
+    
+  }
+  public double driveR1(){
+    if (joyDrive.getRawButton(6) == true){
+      return 1;
+    }else{
+      return 0;
+    }
+  }
+
+  // public double driveL2(){
+  //   return joyDrive.getRawAxis(3);
+  // }
+  // public double driveR2(){
+  //   return joyDrive.getRawAxis(4);
+  // }
 }
+

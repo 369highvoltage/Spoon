@@ -53,6 +53,8 @@ public class Robot extends TimedRobot {
   private double m_LimelightSteerCommand = 0.0;
   JoystickButton btn;
   JoystickButton circle;
+  double movementValLeft;
+  double movementValRight;
 
   NetworkTable turnin_pid_table;
   
@@ -155,7 +157,7 @@ public class Robot extends TimedRobot {
     leftAdjust -= turret_Limelight.steeringAdjust();//adjust each side according to tx
     rightAdjust += turret_Limelight.steeringAdjust();
     System.out.println(turret_Limelight.getDistance());
-    controlSet1();
+    
 /*
      if(Math.abs(camera_subsystem.getTy()) <= mindistance){//checks if the height is less than five, if it is stop 
        drive_subsystem.tankDrive(0, 0, 1);
@@ -180,8 +182,8 @@ public class Robot extends TimedRobot {
     //camera_subsystem.ledOff();
     boolean m_LimelightHasValidTarget;
 
-    btn.whenPressed(new ShootingCommand(0.85, 14000));
-    circle.whileHeld(new AutoAimCommand(turret_Limelight, RobotContainer.m_oi.circle()));
+    btn.whenPressed(new ShootingCommand(0.8, 14000));
+    circle.whileHeld(new AutoAimCommand(turret_Limelight));
     
     // System.out.println("teleop init");
   }
@@ -197,7 +199,7 @@ public class Robot extends TimedRobot {
 
     // System.out.println("circle is "+ RobotContainer.m_oi.circle());
 
-    RobotContainer.m_drive_subsystem.tankDrive(RobotContainer.m_oi.driveGetLeftStick(), RobotContainer.m_oi.driveGetRightStick(), 0.95);
+    // RobotContainer.m_drive_subsystem.tankDrive(RobotContainer.m_oi.driveGetLeftStick(), RobotContainer.m_oi.driveGetRightStick(), 0.85);
     RobotContainer.m_drive_subsystem.getYaw();
     turretVal = RobotContainer.m_oi.getLeftTurretAxis();//Get fixed inputs from oi
     turretVal2 = RobotContainer.m_oi.getRightTurretAxis();
@@ -209,7 +211,13 @@ public class Robot extends TimedRobot {
     RobotContainer.m_turret_subsystem.encoderVal(); //turret encoder  
 
 
-    controlSet1();
+    movementValLeft = RobotContainer.m_oi.driveGetLeftStick() + RobotContainer.m_oi.driveL1()*0.8 + (-RobotContainer.m_oi.driveR1()*0.8); // merges all inputs from driver
+    movementValRight = RobotContainer.m_oi.driveGetRightStick() + RobotContainer.m_oi.driveL1()*0.8 + (-RobotContainer.m_oi.driveR1()*0.8);
+
+    RobotContainer.m_drive_subsystem.tankDrive(movementValLeft, movementValRight, 0.90);
+
+
+    
 
     //Autoaim (toggle)
     // if (RobotContainer.m_oi.circle()==true){
@@ -228,8 +236,8 @@ public class Robot extends TimedRobot {
     }
     
     if (RobotContainer.m_oi.share()){
-      RobotContainer.m_turret_subsystem.feeder(-1.0);
-      RobotContainer.m_intake_subsystem.setFloorSpeed(-1.0);
+      // RobotContainer.m_turret_subsystem.feeder(-1.0);
+      RobotContainer.m_intake_subsystem.setFloorSpeed(1.0);
       RobotContainer.m_intake_subsystem.setIntakeSpeed(1.0);
     }
 
@@ -260,33 +268,4 @@ public class Robot extends TimedRobot {
   public void print(String value){
     System.out.println(value);
   }
-  
-  public void controlSet1() { //Testing Setup
-
-    //Autoaim (toggle)
-    if (RobotContainer.m_oi.circle()==true){
-      while(RobotContainer.m_oi.isCircleUp()!=true){
-          double adjust = turret_Limelight.steeringAdjust();//if there is a target, get the distance from it
-          //print("Adjust is "+adjust);
-          RobotContainer.m_turret_subsystem.setTurretSpeed(-adjust, 0.25);//set the speed to that distance, left is negative and right is positive
-      }
-    }
-    
-     if(RobotContainer.m_oi.r1()){
-      RobotContainer.m_turret_subsystem.encoderReset();
-     }
-      
-    if (RobotContainer.m_oi.share()){
-      RobotContainer.m_turret_subsystem.feeder(-1.0);
-      RobotContainer.m_intake_subsystem.setFloorSpeed(-1.0);
-      RobotContainer.m_intake_subsystem.setIntakeSpeed(-1.0);
-    }
-
-      
-  }
-
-  public void controlSet2() { //Final Setup/Testing Setup 2
-    
-  }
-
 }
