@@ -18,7 +18,7 @@ public class DriveBackward extends CommandBase {
   double initialPosition;
   double currentPosition;
   double distance;
-  double mod = 0.5;
+  double mod;
 
 
   public DriveBackward(double distanceToTravel, double speed) {

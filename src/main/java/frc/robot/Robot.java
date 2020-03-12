@@ -138,7 +138,7 @@ public class Robot extends TimedRobot {
     // autonomus.autonomous1().schedule();
     // autonomus.autonomous2().schedule();
     // autonomousV1.AutonomousV1().schedule();
-    new AutoTest().autonomous1().schedule();
+    new AutoTest().autonomous2().schedule();
     // testing pid values
     // System.out.println(turnin_pid_table.getEntry("kP").getDouble(1));
     // System.out.println(turnin_pid_table.getEntry("kI").getDouble(0));
@@ -189,8 +189,8 @@ public class Robot extends TimedRobot {
     //camera_subsystem.ledOff();
     boolean m_LimelightHasValidTarget;
 
-    btn.whenPressed(new ShootingCommand(0.8, 14000));
-    circle.whileHeld(new AutoAimCommand(turret_Limelight));
+    btn.whenPressed(new ShootingCommand(0.85, 15000));
+    // circle.whileHeld(new AutoAimCommand(turret_Limelight));
     circle.whenPressed(new AutoAimCommand(0.6));
     //circle.whenPressed(new AutoAimCommand(turret_Limelight, turret_subsystem, 0.6));
     //circle.whileHeld(new AutoAimCommand(turret_Limelight, RobotContainer.m_oi.circle()));

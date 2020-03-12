@@ -21,17 +21,17 @@ public class AutoTest { //groups of autonomus commands that do different tasks
         return new SequentialCommandGroup(
             new DriveForward(2, 0.75), //drops the intake
             new ParallelCommandGroup( //shoots 3 lemons
-                new AutoShooting(0.9, 14000, 2),
+                new AutoShooting(0.85, 14000, 2),
                 new IntakeCommand(2)),
             new TurnLeft(35, 1), //turns to the trench
             new DriveForward(5.5, 0.75),
-            new TurnRight(-48,1),
+            new TurnRight(-49,1),
             new ParallelCommandGroup( //collects 2 lemons from the trench
                 new IntakeCommand(4),
                 new DriveForward(6, 0.3)
                 ),
             new ParallelCommandGroup( //shoot 2 lemons from the trench
-                new AutoShooting(0.95 , 14000, 2),
+                new AutoShooting(0.9 , 14000, 2),
                 new IntakeCommand(2)            
             )            
         );
@@ -44,17 +44,21 @@ public class AutoTest { //groups of autonomus commands that do different tasks
             new ParallelCommandGroup( //shoots 3 lemons
                 new AutoShooting(0.8, 14000, 2),
                 new IntakeCommand(2)),
-            new DriveForward(5.0, 0.75),//drives back to the randezvous point 
+            new DriveForward(3, 0.75),//drives back to the randezvous point 
             new ParallelCommandGroup( //collent lemons
                 new DriveForward(2.6, 0.3),
-                new IntakeCommand(2)
-            ),
+                new IntakeCommand(2)),
             new ParallelCommandGroup( //shoots leoms
                 new AutoShooting(0.9, 14000, 3),
                 new IntakeCommand(3)
-            )
-            
-        );
+            ));
     }
+
+    // public Command autonomous3(){
+    //     return new SequentialCommandGroup(
+    //       new DriveForward(2, 0.75),
+    //       new   
+    //     );
+    // }
 }
 
