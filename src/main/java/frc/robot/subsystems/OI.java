@@ -29,8 +29,20 @@ public class OI extends SubsystemBase {
 
   //all axes 
 
-  public double getLeftStick(){ //gets the value of the axis, inverted so forward is 1
+  public double getLSVertical(){ //gets the value of the axis, inverted so forward is 1
     return joy.getRawAxis(1);
+  }
+
+  public double getLSHorizontal(){
+    return joy.getRawAxis(0);
+  }
+
+  public double getRSVertical(){ 
+    return joy.getRawAxis(5);
+  }
+
+  public double getRSHorizontal(){
+    return joy.getRawAxis(2);
   }
 
   public double getLeftTurretAxis(){
@@ -41,9 +53,7 @@ public class OI extends SubsystemBase {
     return joy.getRawAxis(4)/2+0.5;
   }
 
-  public double getRightStick(){ 
-    return joy.getRawAxis(5);
-  }
+
 
   /* all buttons
   getRawButtonPressed for the event and

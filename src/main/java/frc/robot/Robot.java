@@ -206,7 +206,12 @@ public class Robot extends TimedRobot {
     // System.out.println("teleop periodic");
     // System.out.println(turret_Limelight.getDistance());
     // System.out.println("circle is "+ RobotContainer.m_oi.circle());
-
+    double mod = 0.9;
+    double leftVert = RobotContainer.m_oi.getLSVertical() * mod;
+    double leftHorz = RobotContainer.m_oi.getLSHorizontal() * -mod;
+    double rightVert = RobotContainer.m_oi.getRSVertical();
+    double rightHorz = RobotContainer.m_oi.getRSHorizontal();
+    
     // RobotContainer.m_drive_subsystem.tankDrive(RobotContainer.m_oi.driveGetLeftStick(), RobotContainer.m_oi.driveGetRightStick(), 0.85);
     RobotContainer.m_drive_subsystem.getYaw();
     turretVal = RobotContainer.m_oi.getLeftTurretAxis();//Get fixed inputs from oi
@@ -218,11 +223,11 @@ public class Robot extends TimedRobot {
     RobotContainer.m_turret_subsystem.encoderVal(); //turret encoder  
 
 
-    movementValLeft = RobotContainer.m_oi.driveGetLeftStick() + RobotContainer.m_oi.driveL1()*0.8 + (-RobotContainer.m_oi.driveR1()*0.8); // merges all inputs from driver
-    movementValRight = RobotContainer.m_oi.driveGetRightStick() + RobotContainer.m_oi.driveL1()*0.8 + (-RobotContainer.m_oi.driveR1()*0.8);
+   // movementValLeft = RobotContainer.m_oi.getLeftStick();// + RobotContainer.m_oi.driveL1()*0.8 + (-RobotContainer.m_oi.driveR1()*0.8); // merges all inputs from driver
+   // movementValRight = RobotContainer.m_oi.getRightStick();// + RobotContainer.m_oi.driveL1()*0.8 + (-RobotContainer.m_oi.driveR1()*0.8);
 
-    RobotContainer.m_drive_subsystem.tankDrive(movementValLeft, movementValRight, 0.90);
-
+    //RobotContainer.m_drive_subsystem.tankDrive(left, right, 0.90);
+    RobotContainer.m_drive_subsystem.arcadeDrive(leftVert, leftHorz);
 
     
 
