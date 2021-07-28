@@ -15,7 +15,7 @@ import edu.wpi.first.wpilibj.Joystick;
 import frc.robot.subsystems.*;
 
 public class OI extends SubsystemBase {
-  public Joystick joy; //creates joy
+  public Joystick joy; //creates joys
   public Joystick joyDrive;
   
   public OI() {
