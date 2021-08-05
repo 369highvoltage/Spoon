@@ -207,10 +207,11 @@ public class Robot extends TimedRobot {
     // System.out.println(turret_Limelight.getDistance());
     // System.out.println("circle is "+ RobotContainer.m_oi.circle());
     double mod = 0.9;
-    double leftVert = RobotContainer.m_oi.getLSVertical() * mod;
-    double leftHorz = RobotContainer.m_oi.getLSHorizontal() * -mod;
-    double rightVert = RobotContainer.m_oi.getRSVertical();
-    double rightHorz = RobotContainer.m_oi.getRSHorizontal();
+    double horzMod = 0.75;
+    double leftVert = RobotContainer.m_oi.driveGetLSVert() * mod;
+    double leftHorz = RobotContainer.m_oi.driveGetLSHori() * -horzMod;
+    double rightVert = RobotContainer.m_oi.driveGetRSVert() * mod;
+    double rightHorz = RobotContainer.m_oi.driveGetRSHori()* -horzMod;
     
     // RobotContainer.m_drive_subsystem.tankDrive(RobotContainer.m_oi.driveGetLeftStick(), RobotContainer.m_oi.driveGetRightStick(), 0.85);
     RobotContainer.m_drive_subsystem.getYaw();
@@ -226,8 +227,8 @@ public class Robot extends TimedRobot {
    // movementValLeft = RobotContainer.m_oi.getLeftStick();// + RobotContainer.m_oi.driveL1()*0.8 + (-RobotContainer.m_oi.driveR1()*0.8); // merges all inputs from driver
    // movementValRight = RobotContainer.m_oi.getRightStick();// + RobotContainer.m_oi.driveL1()*0.8 + (-RobotContainer.m_oi.driveR1()*0.8);
 
-    //RobotContainer.m_drive_subsystem.tankDrive(left, right, 0.90);
-    RobotContainer.m_drive_subsystem.arcadeDrive(leftVert, leftHorz);
+    //RobotContainer.m_drive_subsystem.tankDrive(leftVert, rightVert, 0.90);
+    RobotContainer.m_drive_subsystem.arcadeDrive(leftVert, rightHorz);
 
     
 

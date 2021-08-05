@@ -126,12 +126,20 @@ public class OI extends SubsystemBase {
 
   //drive joystick
 
-  public double driveGetLeftStick(){ 
+  public double driveGetLSVert(){ 
     return joyDrive.getRawAxis(1);
   }
 
-  public double driveGetRightStick(){ 
+  public double driveGetLSHori(){ 
+    return joyDrive.getRawAxis(0);
+  }
+
+  public double driveGetRSVert(){ 
     return joyDrive.getRawAxis(5);
+  }
+
+  public double driveGetRSHori(){ 
+    return joyDrive.getRawAxis(2);
   }
 
   
