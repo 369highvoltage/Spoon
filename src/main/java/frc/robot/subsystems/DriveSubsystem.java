@@ -9,11 +9,9 @@ package frc.robot.subsystems;
 
 import edu.wpi.first.wpilibj.SpeedController;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import edu.wpi.first.wpilibj.SpeedController;
 import edu.wpi.first.wpilibj.SpeedControllerGroup;
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
 import com.revrobotics.CANSparkMax;
-import com.revrobotics.SparkMax;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 import com.ctre.phoenix.sensors.PigeonIMU;  //Pigeon
 import com.ctre.phoenix.motorcontrol.can.*; //TalonSRX
@@ -33,7 +31,8 @@ public class DriveSubsystem extends SubsystemBase { //create variables are here
   int integral, previous_error, setpoint = 0;
   double error, derivative, rcw;
 
-  public DriveSubsystem(){ //define variables here
+  public DriveSubsystem() { 
+    //define variables here
     m_frontLeft = new CANSparkMax(4, MotorType.kBrushless);
     m_frontRight = new CANSparkMax(1, MotorType.kBrushless);
     m_backLeft = new CANSparkMax(3, MotorType.kBrushless);
