@@ -5,20 +5,13 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj.shuffleboard.*;
 import edu.wpi.cscore.HttpCamera;
 import edu.wpi.cscore.MjpegServer;
-import edu.wpi.cscore.UsbCamera;
-import edu.wpi.first.networktables.NetworkTable;
-
 
 public class CameraSubsystem extends SubsystemBase {
-    private MjpegServer jpeg;
     private static NetworkTableInstance table;
     private HttpCamera LLFeed;
-    private HttpCamera limelightFeed;
-    private int cameraStream = 0;
 
 	/**
 	 * Light modes for Limelight.
