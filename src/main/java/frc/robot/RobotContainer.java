@@ -26,6 +26,7 @@ public class RobotContainer {
   // The robot's subsystems and commands are defined here...
   public static ExampleSubsystem m_exampleSubsystem = new ExampleSubsystem();
 
+  public static ClimberSubsystem m_climber_subsystem = new ClimberSubsystem();
   public static DriveSubsystem m_drive_subsystem = new DriveSubsystem();
   public static CameraSubsystem m_camera_subsystem = new CameraSubsystem();
   public static EncoderSubsystem m_encoder_subsystem = new EncoderSubsystem();

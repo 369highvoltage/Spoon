@@ -16,6 +16,7 @@ import frc.robot.RobotContainer;
  * Add your docs here.
  */
 public class AutoTest { //groups of autonomus commands that do different tasks
+   
     public Command autonomous1() { //6 lemon auto right side of the field
         System.out.println("autonomous1");
         return new SequentialCommandGroup(
@@ -52,6 +53,16 @@ public class AutoTest { //groups of autonomus commands that do different tasks
                 new AutoShooting(0.9, 14000, 3),
                 new IntakeCommand(3)
             ));
+    }
+
+    public Command autonomous3() {
+        System.out.println("autonomous3");
+        return new SequentialCommandGroup(
+            new DriveBackward(3.6, 0.75), //drive forward 
+            new TurnLeft(90, 0.88), // turn left
+            new DriveBackward(1.5, 0.75), //drive forward again to line up
+            new AutoShooting(0.8, 14000, 2)
+        );
     }
 
     // public Command autonomous3(){

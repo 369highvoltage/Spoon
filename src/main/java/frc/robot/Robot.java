@@ -138,7 +138,7 @@ public class Robot extends TimedRobot {
     // autonomus.autonomous1().schedule();
     // autonomus.autonomous2().schedule();
     // autonomousV1.AutonomousV1().schedule();
-    new AutoTest().autonomous2().schedule();
+    new AutoTest().autonomous1().schedule();
     // testing pid values
     // System.out.println(turnin_pid_table.getEntry("kP").getDouble(1));
     // System.out.println(turnin_pid_table.getEntry("kI").getDouble(0));
@@ -187,7 +187,7 @@ public class Robot extends TimedRobot {
       m_autonomousCommand.cancel();
     }
     //camera_subsystem.ledOff();
-    boolean m_LimelightHasValidTarget;
+    //boolean m_LimelightHasValidTarget;
 
     btn.whenPressed(new ShootingCommand(0.85, 15000));
     // circle.whileHeld(new AutoAimCommand(turret_Limelight));
@@ -209,8 +209,8 @@ public class Robot extends TimedRobot {
     double mod = 0.9;
     double horzMod = 0.75;
     double leftVert = RobotContainer.m_oi.driveGetLSVert() * mod;
-    double leftHorz = RobotContainer.m_oi.driveGetLSHori() * -horzMod;
-    double rightVert = RobotContainer.m_oi.driveGetRSVert() * mod;
+    //double leftHorz = RobotContainer.m_oi.driveGetLSHori() * -horzMod;
+    //double rightVert = RobotContainer.m_oi.driveGetRSVert() * mod;
     double rightHorz = RobotContainer.m_oi.driveGetRSHori()* -horzMod;
     
     // RobotContainer.m_drive_subsystem.tankDrive(RobotContainer.m_oi.driveGetLeftStick(), RobotContainer.m_oi.driveGetRightStick(), 0.85);
@@ -224,11 +224,17 @@ public class Robot extends TimedRobot {
     RobotContainer.m_turret_subsystem.encoderVal(); //turret encoder  
 
 
+
    // movementValLeft = RobotContainer.m_oi.getLeftStick();// + RobotContainer.m_oi.driveL1()*0.8 + (-RobotContainer.m_oi.driveR1()*0.8); // merges all inputs from driver
    // movementValRight = RobotContainer.m_oi.getRightStick();// + RobotContainer.m_oi.driveL1()*0.8 + (-RobotContainer.m_oi.driveR1()*0.8);
 
     //RobotContainer.m_drive_subsystem.tankDrive(leftVert, rightVert, 0.90);
     RobotContainer.m_drive_subsystem.arcadeDrive(leftVert, rightHorz);
+    if(RobotContainer.m_oi.l1() == false){
+      RobotContainer.m_climber_subsystem.activateClimber(0, 0.5);
+    }else{
+      RobotContainer.m_climber_subsystem.activateClimber(1, 0.5);
+    }
 
     
 
