@@ -215,26 +215,35 @@ public class Robot extends TimedRobot {
     
     // RobotContainer.m_drive_subsystem.tankDrive(RobotContainer.m_oi.driveGetLeftStick(), RobotContainer.m_oi.driveGetRightStick(), 0.85);
     RobotContainer.m_drive_subsystem.getYaw();
-    turretVal = RobotContainer.m_oi.getLeftTurretAxis();//Get fixed inputs from oi
-    turretVal2 = RobotContainer.m_oi.getRightTurretAxis();
-    turretVal2 = turretVal-turretVal2;//final calculations
+    //turretVal = RobotContainer.m_oi.getLeftTurretAxis();//Get fixed inputs from oi
+    //turretVal2 = RobotContainer.m_oi.getRightTurretAxis();
+    //turretVal2 = turretVal-turretVal2;//final calculations
+    turretVal = RobotContainer.m_oi.getLSHorizontal();
     RobotContainer.m_intake_subsystem.setFloorSpeed(RobotContainer.m_oi.square());
     RobotContainer.m_intake_subsystem.setIntakeSpeed(-RobotContainer.m_oi.x());
-    RobotContainer.m_turret_subsystem.setTurretSpeed(turretVal2, 0.25);
+    RobotContainer.m_turret_subsystem.setTurretSpeed(turretVal, 0.25);
     RobotContainer.m_turret_subsystem.encoderVal(); //turret encoder  
-
-
 
    // movementValLeft = RobotContainer.m_oi.getLeftStick();// + RobotContainer.m_oi.driveL1()*0.8 + (-RobotContainer.m_oi.driveR1()*0.8); // merges all inputs from driver
    // movementValRight = RobotContainer.m_oi.getRightStick();// + RobotContainer.m_oi.driveL1()*0.8 + (-RobotContainer.m_oi.driveR1()*0.8);
 
     //RobotContainer.m_drive_subsystem.tankDrive(leftVert, rightVert, 0.90);
     RobotContainer.m_drive_subsystem.arcadeDrive(leftVert, rightHorz);
-    if(RobotContainer.m_oi.l1() == false){
+    /**
+    if(RobotContainer.m_oi.leftStick() == false){
       RobotContainer.m_climber_subsystem.activateClimber(0, 0.5);
     }else{
       RobotContainer.m_climber_subsystem.activateClimber(1, 0.5);
+    } */
+    double leftStickPressed = 0;
+    if(RobotContainer.m_oi.leftStick()){
+      leftStickPressed = 1.0;
+    }else{
+      leftStickPressed = 0;
     }
+      RobotContainer.m_climber_subsystem.activateClimber(-RobotContainer.m_oi.getLeftTurretAxis(), 1);
+
+    
 
     
 
